@@ -3,7 +3,7 @@
 (asdf:defsystem :clunit2
   :version "0.2.4"
   :author "Tapiwa Gutu <tgutu@ml.sun.ac.za>, cage"
-  :mailto "cage@katamail.com"
+  :mailto "cage-dev@twistfold.it"
   :bug-tracker "https://notabug.org/cage/clunit2/issues"
   :licence "BSD"
   :description "CLUnit is a Common Lisp unit testing framework."
