@@ -153,6 +153,11 @@ SUMMARY:
 
 (if not in a REPL, you may have to print the return value of ``run-test``).
 
+* BUGS
+  Please file bug report on
+  the [[https://notabug.org/cage/clunit2/issues][issue tracker]]
+
+
 * Notes
 
 This  is a  fork of https://github.com/tgutu/clunit .
