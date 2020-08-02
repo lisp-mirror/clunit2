@@ -29,6 +29,7 @@ testing experience:
                           (:module "classes"
                                    :components
                                    ((:file "assertion-conditions")
+                                    (:file "test-suite-failure-conditions")
                                     (:file "clunit-report")
                                     (:file "clunit-test-case")
                                     (:file "clunit-test-suite")
