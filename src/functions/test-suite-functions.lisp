@@ -1,6 +1,7 @@
 (in-package :clunit)
 
-(defun run-suite (suite &key use-debugger (report-progress t) stop-on-fail)
+(defun run-suite (suite &key use-debugger (report-progress t) stop-on-fail
+                          signal-condition-on-fail)
   "Executes a  test case called  SUITE. If REPORT-PROGRESS  is non-NIL,
 the  test  progress  is  reported. If  USE-DEBUGGER  is  non-NIL,  the
 debugger is invoked  whenever an assertion fails.   If STOP-ON-FAIL is
@@ -29,7 +30,17 @@ fails or an error occurs."
         (cancel-unit-test ()
           :report (lambda (s) (format s "Cancel unit test execution."))
           nil)))
-    (setf *clunit-equality-test* #'equalp) ; Restore *CLUNIT-EQUALITY-TEST* to its default value.
+    (setf *clunit-equality-test* #'equalp) ; Restore *CLUNIT-EQUALITY-TEST* to its default value
+    (let ((passed (slot-value  *clunit-report* 'failed))
+          (failed (slot-value  *clunit-report* 'failed))
+          (errors (slot-value  *clunit-report* 'errors)))
+      (when (and signal-condition-on-fail
+                 (or (plusp failed)
+                     (plusp errors)))
+        (error 'test-suite-failure
+               :test-errors errors
+               :test-fails failed
+               :total-tests (+ errors failed passed))))
     *clunit-report*))
 
 (defun execute-test-suite (test-suite)

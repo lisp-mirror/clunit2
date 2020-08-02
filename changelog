@@ -2,50 +2,53 @@ CLUnit: A Common Lisp Unit Testing Framework.
 Author(s):      Tapiwa H.M. Gutu
 Maintainer(s):  cage
 
-        Update history:
+	Update history:
 
-        DD/MM/YY
+	DD/MM/YY
+
+	02/08/2020
+	Added a signal for test run failure. [jgodbout]
 
 	15/04/2018
 	Forked repository [cage]
 
-        10/11/12
+	10/11/12
 	Redefined  methods  of  the  generic  function  EXPAND-FIXTURE  to
 	specialize on the  test suite name instead of class  to solve some
 	fringe cases with unintended effects. [THMG]
 
-        17/11/12
-        Reduced  the  use  of  generic functions  internally,  now  its  a
+	17/11/12
+	Reduced  the  use  of  generic functions  internally,  now  its  a
 	combination of hash table lookups and stored objects.
 
-        Added support for explicit function test dependency declarations.
+	Added support for explicit function test dependency declarations.
 
 	Added support for automatic re-run of failed tests via (RERUN-FAILED-TESTS)
-        [THMG]
+	[THMG]
 
-        18/11/12
-        Added extra assertion test forms: ASSERT-EQUALITY and ASSERT-FAIL. [THMG]
+	18/11/12
+	Added extra assertion test forms: ASSERT-EQUALITY and ASSERT-FAIL. [THMG]
 
-        20/12/12
-        Added  functions to  query various  information about  the defined
-        test cases  and test suites e.g.  returning a list of  all defined
-        test names. [THMG]
+	20/12/12
+	Added  functions to  query various  information about  the defined
+	test cases  and test suites e.g.  returning a list of  all defined
+	test names. [THMG]
 
-        03/01/13
-        Defined  a new  macro UNDEFFIXTURE  which  is used  to undefine  a
+	03/01/13
+	Defined  a new  macro UNDEFFIXTURE  which  is used  to undefine  a
 	previously defined test suite fixture.
 
-        Updated  the  documentation  to  include   a  new  entry  for  the
-        UNDEFFIXTURE macro.
+	Updated  the  documentation  to  include   a  new  entry  for  the
+	UNDEFFIXTURE macro.
 
-        Modified the default error reporting function so that it skips the
-        detailed failure reports section if there is nothing to report.
+	Modified the default error reporting function so that it skips the
+	detailed failure reports section if there is nothing to report.
 
-        Tweaked the reporting of ASSSERT-TRUE to say 'Expected: (NOT NIL)'
-        instead of 'Expected: T', since it expects a generalized boolean.
+	Tweaked the reporting of ASSSERT-TRUE to say 'Expected: (NOT NIL)'
+	instead of 'Expected: T', since it expects a generalized boolean.
 
-        BUGFIX: The  functions RUN-TEST and RERUN-FAILED-TESTS  were using
-        the     undefined    variable     *QUEUED-TESTS*    instead     of
-        *QUEUED-TEST-REPORTS*
+	BUGFIX: The  functions RUN-TEST and RERUN-FAILED-TESTS  were using
+	the     undefined    variable     *QUEUED-TESTS*    instead     of
+	*QUEUED-TEST-REPORTS*
 
-        [THMG]
+	[THMG]

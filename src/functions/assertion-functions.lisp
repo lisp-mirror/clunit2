@@ -1,6 +1,5 @@
 (in-package :clunit)
 
-
 (defun signal-assertion (type &key expression expected returned forms message (format-string "") args)
   (case type
     (:pass

@@ -66,3 +66,9 @@
   (pprint-logical-block (stream nil)
     (with-slots (format-string args) condition
       (format stream "~?" format-string args))))
+
+
+(defmethod print-format ((condition test-suite-failure-condition) (format (eql :default)) stream)
+  (pprint-logical-block (stream nil)
+    (with-slots (test-errors test-failed total-tests) condition
+      (format stream "Some tests failed ~D ~D ~D" test-errors test-failed total-tests))))
