@@ -27,13 +27,23 @@
                         "~4I~:@_Test functions:~8I~:@_Executed: ~D~:@_Skipped:  ~D~-8I~:@_~:@_Tested ~D assertion~:P.~8I"
                         (- (length test-reports) skipped) skipped total)
         (unless (zerop total)
-          (if (plusp passed)
-              (format stream "~:@_Passed: ~D/~D (~5,1F%)" passed total (* 100 (/ passed total))))
-          (if (plusp failed)
-              (format stream "~:@_Failed: ~D/~D (~5,1F%)" failed total (* 100 (/ failed total))))
-          (if (plusp errors)
-              (format stream "~:@_Errors: ~D/~D (~5,1F%)"
-                      errors total (* 100 (/ errors total)))))))))
+          (let ((all-passed (and (zerop failed)
+                                 (zerop errors)))
+                (all-failed (and (zerop passed)
+                                 (zerop errors)))
+                (all-errors (and (zerop passed)
+                                 (zerop failed))))
+            (when (plusp passed)
+              (format stream
+                      "~:@_Passed: ~D/~D ~:[some tests not passed~;all tests passed~]"
+                      passed total all-passed))
+            (when (plusp failed)
+              (format stream
+                      "~:@_Failed: ~D/~D ~:[some tests failed~;all tests failed~]"
+                      failed total all-failed))
+            (when (plusp errors)
+              (format stream "~:@_Errors: ~D/~D ~:[some tests had errors~;all tests had errors~]"
+                      errors total all-errors))))))))
 
 (defmethod print-format ((report clunit-test-report) (format (eql :default)) stream)
   (with-slots (test-name assertion-conditions) report
