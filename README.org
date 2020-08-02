@@ -84,35 +84,34 @@ SUMMARY:
         Skipped:  0
 
     Tested 4 assertions.
-        Passed: 3/4 ( 75.0%)
-        Failed: 1/4 ( 25.0%)
+        Passed: 3/4 some tests not passed
+        Failed: 1/4 some tests failed
 #+END_SRC
 
-(if you  are entering  forms in  the REPL, the  ``print`` form  is not
+(if you  are entering  forms in  the REPL, the  ~print~ form  is not
 usually needed).
 
 # Tests and assertions
 
-Each  test, like  ``test-int1`` in  the above  example, can  contain a
+Each  test, like  ~test-int1~ in  the above  example, can  contain a
 number of assertions, given in the table below:
 
-|-------------------------------------------+----------------------|
-| Assertion                                 | Description          |
-|-------------------------------------------+----------------------|
-|                                           | <20>                 |
-| ``assert-true EXPRESSION``                | Passes if the expression ``EXPRESSION`` is not ``NIL`` |
-| ``assert-false EXPRESSION``               | Passes if ``EXPRESSION`` is ``NIL`` |
-| ``assert-eq VALUE EXPRESSION``            | Passes if ``(EQ VALUE EXPRESSION)`` returns true |
-| ``assert-eql VALUE EXPRESSION``           | Passes if ``(EQL VALUE EXPRESSION)`` returns true |
-| ``assert-equal VALUE EXPRESSION``         | Passes if ``(EQUAL VALUE EXPRESSION)`` returns true |
-| ``assert-equalp VALUE EXPRESSION``        | Passes if ``(EQUALP VALUE EXPRESSION)`` returns true |
-| ``assert-equality TEST VALUE EXPRESSION`` | Passes if ``(FUNCALL TEST VALUE EXPRESSION)`` returns true |
-| ``assert-equality* VALUE EXPRESSION``     | Passes if  ``(FUNCALL \*clunit-equality-test\* VALUE EXPRESSION)`` returns true. By default *clunit-equality-test* is ``EQUALP`` |
-| ``assert-expands EXPANSION EXPRESSION``   | Tests macro expansion, passes if ``(EQUALP EXPANSION (MACROEXPAND-1 EXPRESSION))`` is true |
-| ``assert-condition CONDITION EXPRESSION`` | Passes if ``EXPRESSION`` signals ``CONDITION`` |
-| ``assert-fails FORMAT-STRING``            | Force test to fail, giving a format string for the message |
-|-------------------------------------------+----------------------|
-
+|-----------------------------------------+------------------------------------------------------------------------------------------------------------------------------|
+| Assertion                               | Description                                                                                                                  |
+|-----------------------------------------+------------------------------------------------------------------------------------------------------------------------------|
+|                                         | <20>                                                                                                                         |
+| ~assert-true EXPRESSION~                | Passes if the expression ~EXPRESSION~ is not ~NIL~                                                                           |
+| ~assert-false EXPRESSION~               | Passes if ~EXPRESSION~ is ~NIL~                                                                                              |
+| ~assert-eq VALUE EXPRESSION~            | Passes if ~(EQ VALUE EXPRESSION)~ returns true                                                                               |
+| ~assert-eql VALUE EXPRESSION~           | Passes if ~(EQL VALUE EXPRESSION)~ returns true                                                                              |
+| ~assert-equal VALUE EXPRESSION~         | Passes if ~(EQUAL VALUE EXPRESSION)~ returns true                                                                            |
+| ~assert-equalp VALUE EXPRESSION~        | Passes if ~(EQUALP VALUE EXPRESSION)~ returns true                                                                           |
+| ~assert-equality TEST VALUE EXPRESSION~ | Passes if ~(FUNCALL TEST VALUE EXPRESSION)~ returns true                                                                     |
+| ~assert-equality* VALUE EXPRESSION~     | Passes if  ~(FUNCALL *clunit-equality-test* VALUE EXPRESSION)~ returns true. By default *clunit-equality-test* is ~EQUALP~ |
+| ~assert-expands EXPANSION EXPRESSION~   | Tests macro expansion, passes if ~(EQUALP EXPANSION (MACROEXPAND-1 EXPRESSION))~ is true                                     |
+| ~assert-condition CONDITION EXPRESSION~ | Passes if ~EXPRESSION~ signals ~CONDITION~                                                                                   |
+| ~assert-fails FORMAT-STRING~            | Force test to fail, giving a format string for the message                                                                   |
+|-----------------------------------------+------------------------------------------------------------------------------------------------------------------------------|
 
 All  of these  tests  take  optional forms,  which  are evaluated  and
 printed  if  the test  fails.   These  can  be  used to  provide  test
@@ -139,6 +138,7 @@ FAILURE DETAILS:
                     B => 2
                     C => 3
 
+
 SUMMARY:
 ========
     Test functions:
@@ -146,17 +146,14 @@ SUMMARY:
         Skipped:  0
 
     Tested 1 assertion.
-        Passed: 0/1 (  0.0%)
-        Failed: 1/1 (100.0%)
-        Errors: 0/1 (  0.0%)
+        Failed: 1/1 all tests failed
 #+END_SRC
 
-(if not in a REPL, you may have to print the return value of ``run-test``).
+(if not in a REPL, you may have to print the return value of ~run-test~).
 
 * BUGS
   Please file bug report on
   the [[https://notabug.org/cage/clunit2/issues][issue tracker]]
-
 
 * Notes
 
