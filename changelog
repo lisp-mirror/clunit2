@@ -1,6 +1,6 @@
 CLUnit: A Common Lisp Unit Testing Framework.
-Author(s):      Tapiwa H.M. Gutu
-Maintainer(s):  cage
+Author(s):	Tapiwa H.M. Gutu
+Maintainer(s):	cage
 
 	Update history:
 
@@ -13,12 +13,12 @@ Maintainer(s):  cage
 	Forked repository [cage]
 
 	10/11/12
-	Redefined  methods  of  the  generic  function  EXPAND-FIXTURE  to
+	Redefined  methods  of	the  generic  function	EXPAND-FIXTURE	to
 	specialize on the  test suite name instead of class  to solve some
 	fringe cases with unintended effects. [THMG]
 
 	17/11/12
-	Reduced  the  use  of  generic functions  internally,  now  its  a
+	Reduced	 the  use  of  generic functions  internally,  now  its	 a
 	combination of hash table lookups and stored objects.
 
 	Added support for explicit function test dependency declarations.
@@ -35,10 +35,10 @@ Maintainer(s):  cage
 	test names. [THMG]
 
 	03/01/13
-	Defined  a new  macro UNDEFFIXTURE  which  is used  to undefine  a
+	Defined	 a new	macro UNDEFFIXTURE  which  is used  to undefine	 a
 	previously defined test suite fixture.
 
-	Updated  the  documentation  to  include   a  new  entry  for  the
+	Updated	 the  documentation  to	 include   a  new  entry  for  the
 	UNDEFFIXTURE macro.
 
 	Modified the default error reporting function so that it skips the
@@ -47,8 +47,8 @@ Maintainer(s):  cage
 	Tweaked the reporting of ASSSERT-TRUE to say 'Expected: (NOT NIL)'
 	instead of 'Expected: T', since it expects a generalized boolean.
 
-	BUGFIX: The  functions RUN-TEST and RERUN-FAILED-TESTS  were using
-	the     undefined    variable     *QUEUED-TESTS*    instead     of
+	BUGFIX: The  functions RUN-TEST and RERUN-FAILED-TESTS	were using
+	the	undefined    variable	  *QUEUED-TESTS*    instead	of
 	*QUEUED-TEST-REPORTS*
 
 	[THMG]
