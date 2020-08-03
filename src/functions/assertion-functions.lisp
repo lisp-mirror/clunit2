@@ -27,24 +27,22 @@
         (setf assertion-conditions (nconc assertion-conditions (list condition)))
         (typecase condition
           (assertion-error
-           ;; TODO: use when?
-           (if passed-p
-               (setf passed-p nil))
+           (when passed-p
+             (setf passed-p nil))
            (incf errors)
            (report-assertion-progress :error))
           (assertion-passed
            (incf passed)
            (report-assertion-progress :pass)
-           (invoke-restart restart)) ; we do not  invoke the debugger
-                                     ; for successful assertions.
+           (invoke-restart restart))  ; we do not  invoke the debugger
+                                      ; for successful assertions.
           ((or assertion-failed assertion-fail-forced)
-           ;; TODO: use when?
-           (if passed-p
-               (setf passed-p nil))
+           (when passed-p
+             (setf passed-p nil))
            (incf failed)
            (report-assertion-progress :fail)))))
-    (if *stop-on-fail* ;; TODO use when?
-        (invoke-restart 'cancel-unit-test))
-    (if (and restart ;; TODO use when?
-             (not *use-debugger*))
-        (invoke-restart restart))))
+    (when *stop-on-fail*
+      (invoke-restart 'cancel-unit-test))
+    (when (and restart
+               (not *use-debugger*))
+      (invoke-restart restart))))
