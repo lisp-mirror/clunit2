@@ -27,7 +27,23 @@
 suites this  test case is  associated with as  well as any  other test
 cases that  it depends on.  The  test case body is  revaluated on each
 run,  so any  redefinition  of  macros and  inline  functions will  be
-automatically visible without having to redefine the test."
+automatically visible without having to redefine the test.
+
+A test case will be queued until all tests cases it depends on have been run.
+If all the test cases pass the queued test is executed otherwise its skipped.
+
+The DEFTEST macro has three possible forms:
+
+- Define a test case not associated with any test suite and with no dependencies.<br/>
+   (deftest name () . body)
+
+- Define a test case which is associated with test suites: suite1 ... suiteN.
+   (deftest name (suite1 suite2 ... suiteN) . body)
+
+- Define a test case associated with test suites: suite1 ... suiteN and
+  depends on tests: test1 ... testN
+
+   (deftest name ((suite1 suite2 ... suiteN) (test1 test2 ... testN)) . body)"
 (with-gensyms (parent-suites test-dependencies test-function)
     `(let ((,parent-suites ',declarations) ,test-dependencies ,test-function)
        (unless (listp ,parent-suites)
