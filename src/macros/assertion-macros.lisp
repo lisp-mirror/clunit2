@@ -67,7 +67,13 @@ instead."
 
 (defmacro assert-false (expression &body forms)
   "Evaluates EXPRESSION  as an  assertion, an  assertion passes  if it
-returns false. FORMS and their values are printed if the test fails."
+returns nil. FORMS and their values are printed if the test fails.
+
+example:
+
+(assert-false (= 1 2)) ; This assertion passes.
+
+"
   (with-gensyms (result)
     (assertion-expander :result            result
                         :test              `(not ,result)
@@ -79,7 +85,7 @@ returns false. FORMS and their values are printed if the test fails."
 ;; Equality assertion macros.
 (defmacro assert-eq (value expression &body forms)
   "Evaluates EXPRESSION  as an assertion,  an assertion passes  if (EQ
-VALUE EXPRESSION) returns true. FORMS  and their values are printed if
+VALUE EXPRESSION) values non nil. FORMS  and their values are printed if
 the test fails."
   (with-gensyms (result)
     (assertion-expander :result            result
@@ -91,7 +97,7 @@ the test fails."
 
 (defmacro assert-eql (value expression &body forms)
   "Evaluates EXPRESSION as  an assertion, an assertion  passes if (EQL
-VALUE EXPRESSION) returns true. FORMS  and their values are printed if
+VALUE EXPRESSION) values non nil. FORMS  and their values are printed if
 the test fails."
   (with-gensyms (result)
     (assertion-expander :result            result
@@ -103,8 +109,19 @@ the test fails."
 
 (defmacro assert-equal (value expression &body forms)
   "Evaluates EXPRESSION as an assertion, an assertion passes if (EQUAL
-VALUE EXPRESSION) returns true. FORMS  and their values are printed if
-the test fails."
+VALUE EXPRESSION) values non nil. FORMS  and their values are printed if
+the test fails.
+
+example
+  (let ((q (+ 2 -2)))
+       (assert-equal 4 q q))
+  ;; This  assertion   fails  and   prints  the  message   below  with
+  ;; *clunit-report-format* set to :DEFAULT.
+  Expression: (EQUAL 4 Q)
+  Expected: 4
+  Returned: 0
+  Q => 0
+"
   (with-gensyms (result)
     (assertion-expander :result            result
                         :test              `(equal ,value ,result)
@@ -115,7 +132,7 @@ the test fails."
 
 (defmacro assert-equalp (value expression &body forms)
   "Evaluates  EXPRESSION   as  an   assertion,  an   assertion  passes
-if (EQUALP VALUE EXPRESSION) returns  true. FORMS and their values are
+if (EQUALP VALUE EXPRESSION) values non nil. FORMS and their values are
 printed if the test fails."
   (with-gensyms (result)
     (assertion-expander :result            result
@@ -127,8 +144,13 @@ printed if the test fails."
 
 (defmacro assert-equality (test value expression &body forms)
   "Evaluates  EXPRESSION   as  an   assertion,  an   assertion  passes
-if  (FUNCALL TEST  VALUE  EXPRESSION) returns  true.  FORMS and  their
-values are printed if the test fails."
+if  (FUNCALL TEST  VALUE  EXPRESSION) values non nil.  FORMS and  their
+values are printed if the test fails.
+
+Example:
+
+(assert-equality #'string= \"some string\" \"another string\") ; This assertion fails.
+"
   (with-gensyms (result)
     (assertion-expander :result            result
                         :test              `(funcall ,test ,value ,result)
@@ -140,7 +162,14 @@ values are printed if the test fails."
 (defmacro assert-equality* (value expression &body forms)
   "Evaluates  EXPRESSION   as  an   assertion,  an   assertion  passes
 if   (FUNCALL   *clunit-equality-test*   VALUE   EXPRESSION)   returns
-true. FORMS and their values are printed if the test fails."
+true. FORMS and their values are printed if the test fails.
+
+Example:
+
+  (let ((*clunit-equality-test* #'string=))
+       (assert-equality* \"some string\" \"another string\")) ; This assertion fails
+
+"
   (with-gensyms (result)
     (assertion-expander :result            result
                         :test              `(funcall *clunit-equality-test* ,value ,result)
@@ -152,7 +181,7 @@ true. FORMS and their values are printed if the test fails."
 ;; MACROEXPAND-1 assertion macro
 (defmacro assert-expands (&environment env expansion expression &body forms)
   "Evaluates  EXPRESSION   as  an   assertion,  an   assertion  passes
-if (EQUALP  EXPANSION (MACROEXPAND-1 EXPRESSION)) returns  true. FORMS
+if (EQUALP  EXPANSION (MACROEXPAND-1 EXPRESSION)) values non nil. FORMS
 and their values are printed if the test fails."
   (with-gensyms (result)
     (assertion-expander :result            result
@@ -166,7 +195,12 @@ and their values are printed if the test fails."
 (defmacro assert-condition (condition expression &body forms)
   "Evaluates  EXPRESSION  as  an  assertion, an  assertion  passes  if
 EXPRESSION signals  CONDITION. FORMS and  their values are  printed if
-the test fails."
+the test fails.
+
+Example:
+
+(assert-condition arithmetic-error (/ 1 0)) ; This assertion passes.
+"
   `(with-assert-restart
      (handler-case
          (progn
@@ -185,6 +219,11 @@ the test fails."
 
 ;; Force assertion failure.
 (defun assert-fail (format-string &rest args)
+  "Calling this function is equivalent to signalling a failed assertion.
+The FORMAT-STRING and ARGS are used to print the failure message as follows:
+
+  (format stream \"~?\" format-string args)
+If you want to achieve a nice looking output message, use pretty printing directives in the format string e.g. \"~:@_\" instead of \"%\"."
   (with-assert-restart
     (signal-assertion :fail-forced
                       :format-string format-string

@@ -40,8 +40,8 @@
   argument to the function RERUN-FAILED-TESTS.")
 
 (defvar *clunit-equality-test*  #'equalp
-  "The equality  test used  to compare  values by  the ASSERT-EQUALITY
-  macro.")
+  "Holds the equality test used to compare values by the ASSERT-EQUALITY macro.<br/>
+The default value <em>#'equalp</em> is reset at the end of each test/suite run.")
 
 (defvar *clunit-test-report*    nil
   "Holds a CLUNIT-TEST-REPORT object for each executing test case.")
