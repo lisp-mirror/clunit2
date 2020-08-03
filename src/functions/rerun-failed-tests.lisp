@@ -22,8 +22,8 @@ cancelled when any assertion fails or an error occurs."
                    (assertion-condition #'handle-assertion))
       (restart-case
           (progn
-            (if *report-progress* ;; TODO use when?
-                (format t "~%PROGRESS:~%========="))
+            (when *report-progress*
+              (format t "~%PROGRESS:~%========="))
             (setf *queued-test-reports* (list)
                   *last-clunit-report*  *clunit-report*)
             (flet ((process-test-report (test-report)
