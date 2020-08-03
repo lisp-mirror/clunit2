@@ -50,7 +50,7 @@ Check out the comprehensive [[http://tgutu.github.com/clunit][CLUnit Tutorial]].
     (assert-true (= 1.0 -1.0))
     (assert-equalp 4.0 (+ 2.0 2.0)))
 
-  (print (run-suite 'NumberSuite))
+  (run-suite 'NumberSuite)
 
 #+END_SRC
 
@@ -88,10 +88,7 @@ SUMMARY:
         Failed: 1/4 some tests failed
 #+END_SRC
 
-(if you  are entering  forms in  the REPL, the  ~print~ form  is not
-usually needed).
-
-# Tests and assertions
+* Tests and assertions
 
 Each  test, like  ~test-int1~ in  the above  example, can  contain a
 number of assertions, given in the table below:
@@ -148,8 +145,6 @@ SUMMARY:
     Tested 1 assertion.
         Failed: 1/1 all tests failed
 #+END_SRC
-
-(if not in a REPL, you may have to print the return value of ~run-test~).
 
 * BUGS
   Please file bug report on

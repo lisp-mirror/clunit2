@@ -1,7 +1,8 @@
 (in-package :clunit)
 
 (defun run-suite (suite &key use-debugger (report-progress t) stop-on-fail
-                          signal-condition-on-fail)
+                          signal-condition-on-fail
+                          (print-results-summary t))
   "Executes a  test case called  SUITE. If REPORT-PROGRESS  is non-NIL,
 the  test  progress  is  reported. If  USE-DEBUGGER  is  non-NIL,  the
 debugger is invoked  whenever an assertion fails.   If STOP-ON-FAIL is
@@ -20,12 +21,12 @@ fails or an error occurs."
       (restart-case
           (progn
             (if *report-progress*
-                (format *standard-output* "~%PROGRESS:~%========="))
+                (format t "~%PROGRESS:~%========="))
             (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
             (execute-test-suite test-suite)
             (when *queued-test-reports*
               (if *report-progress*
-                  (format *standard-output* "~%~%QUEUED TESTS:~%============="))
+                  (format t "~%~%QUEUED TESTS:~%============="))
               (process-queued-tests)))
         (cancel-unit-test ()
           :report (lambda (s) (format s "Cancel unit test execution."))
@@ -41,6 +42,8 @@ fails or an error occurs."
                :test-errors errors
                :test-fails failed
                :total-tests (+ errors failed passed))))
+    (when print-results-summary
+      (format t "~%~a~%" *clunit-report*))
     *clunit-report*))
 
 (defun execute-test-suite (test-suite)

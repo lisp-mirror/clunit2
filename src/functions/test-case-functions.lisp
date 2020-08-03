@@ -1,7 +1,11 @@
 (in-package :clunit)
 
 
-(defun run-test (test &key use-debugger (report-progress t) stop-on-fail)
+(defun run-test (test &key
+                        use-debugger
+                        (report-progress t)
+                        stop-on-fail
+                        (print-results-summary t))
   "Executes a test case called TEST. If REPORT-PROGRESS is non-NIL, the
 test progress is reported. If USE-DEBUGGER is non-NIL, the debugger is
 invoked whenever an assertion fails.   If STOP-ON-FAIL is non-NIL, the
@@ -20,13 +24,15 @@ error occurs."
       (restart-case
           (progn
             (if *report-progress*
-                (format *standard-output* "~%PROGRESS:~%========="))
+                (format t "~%PROGRESS:~%========="))
             (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
             (execute-test-case test-case))
         (cancel-unit-test ()
           :report (lambda (s) (format s "Cancel unit test execution."))
           nil)))
     (setf *clunit-equality-test* #'equalp)
+    (when print-results-summary
+      (format t "~%~a~%" *clunit-report*))
     *clunit-report*))
 
 ;; EXECUTE-TEST-CASE Algorithm:
@@ -78,11 +84,11 @@ returns NIL."
 
 (defun queue-test-case ()
   (if *report-progress*
-      (format *standard-output* "[QUEUED]")))
+      (format t "[QUEUED]")))
 
 (defun skip-test-case ()
   (if *report-progress*
-      (format *standard-output* "[SKIPPED]"))
+      (format t "[SKIPPED]"))
   (incf (slot-value *clunit-report* 'skipped))
   (setf (slot-value *clunit-test-report* 'skipped-p) t))
 
