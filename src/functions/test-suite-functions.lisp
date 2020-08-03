@@ -32,9 +32,8 @@ fails or an error occurs."
           :report (lambda (s) (format s "Cancel unit test execution."))
           nil)))
     (setf *clunit-equality-test* #'equalp) ; Restore *CLUNIT-EQUALITY-TEST* to its default value
-    (let ((passed (slot-value  *clunit-report* 'failed))
-          (failed (slot-value  *clunit-report* 'failed))
-          (errors (slot-value  *clunit-report* 'errors)))
+    (with-slots (passed failed errors)
+        *clunit-report*
       (when (and signal-condition-on-fail
                  (or (plusp failed)
                      (plusp errors)))

@@ -2,10 +2,10 @@
 
 (asdf:defsystem :clunit2
   :version "0.2.4"
-  :author "Tapiwa Gutu <tgutu@ml.sun.ac.za>, cage"
-  :mailto "cage-dev@twistfold.it"
+  :author      "Tapiwa Gutu"
+  :maintainer  "cage"
   :bug-tracker "https://notabug.org/cage/clunit2/issues"
-  :licence "BSD"
+  :licence     "BSD"
   :description "CLUnit is a Common Lisp unit testing framework."
   :long-description
   "CLUnit is a Common Lisp unit testing framework. It is designed to be easy to use so that you can quickly start testing.

@@ -14,7 +14,7 @@
     :initform 0
     :initarg  :skipped)
    (test-reports
-    :initform (list)
+    :initform ()
     :reader   test-reports))
   (:documentation "the  clunit-report instance  is used to  store the
  aggregated reports of all executed test cases."))
