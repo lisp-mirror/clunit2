@@ -374,12 +374,14 @@
       <argument  value-type="(or t nil)" arg-type="key" name='(report-progress t)'/>
       <argument  value-type="(or t nil)" arg-type="key" name="use-debugger"/>
       <argument  value-type="(or t nil)" arg-type="key" name="stop-on-fail"/>
+      <argument  value-type="(or t nil)" arg-type="key" name="(print-results-summary t)"/>
       <description>
         <p>
           Executes a test case called NAME.
           If REPORT-PROGRESS is non-NIL, the test progress is reported.
           If USE-DEBUGGER is non-NIL, the debugger is invoked whenever an assertion fails.
           If STOP-ON-FAIL is non-NIL, the rest of the unit test is cancelled when any assertion fails or an error occurs.
+          if PRINT-RESULTS-SUMMARY is non nil the summary results of tests is printed on the standard output.
         </p>
       </description>
     </symbol>
@@ -390,13 +392,15 @@
       <argument  value-type="(or t nil)" arg-type="key" name="use-debugger"/>
       <argument  value-type="(or t nil)" arg-type="key" name="stop-on-fail"/>
       <argument  value-type="(or t nil)" arg-type="key" name="signal-condition-on-fail"/>
+      <argument  value-type="(or t nil)" arg-type="key" name="(print-results-summary t)"/>
       <description>
         <p>
           Executes a test suite called NAME.
           If REPORT-PROGRESS is non-NIL, the test progress is reported.
           If USE-DEBUGGER is non-NIL, the debugger is invoked whenever an assertion fails.
           If STOP-ON-FAIL is non-NIL, the rest of the unit test is cancelled when any assertion fails or an error occurs.
-          If SIGNAL-CONDITION-ON-FAIL is non-NIL, run-suite will signal a TEST-SUITE-FAILURE condition.
+          If SIGNAL-CONDITION-ON-FAIL is non-NIL, run-suite will signal a TEST-SUITE-FAILURE condition if at least either a test fails or signal an error condition.
+          if PRINT-RESULTS-SUMMARY is non nil the summary results of tests is printed on the standard output.
         </p>
       </description>
     </symbol>
@@ -406,12 +410,14 @@
       <argument  value-type="(or t nil)" arg-type="key" name="use-debugger"/>
       <argument  value-type="(or t nil)" arg-type="key" name="stop-on-fail"/>
       <argument  value-type="(or t nil)" arg-type="key" name='(last-report *last-clunit-report*)'/>
+      <argument  value-type="(or t nil)" arg-type="key" name="(print-results-summary t)"/>
       <description>
         <p>
           Reruns all failed tests recorded in LAST-REPORT which defaults to the report of the previous test run.
           If REPORT-PROGRESS is non-NIL, the test progress is reported.
           If USE-DEBUGGER is non-NIL, the debugger is invoked whenever an assertion fails.
           If STOP-ON-FAIL is non-NIL, the rest of the unit test is cancelled when any assertion fails or an error occurs.
+          if PRINT-RESULTS-SUMMARY is non nil the summary results of tests is printed on the standard output.
         </p>
       </description>
     </symbol>

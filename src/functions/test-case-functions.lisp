@@ -1,6 +1,5 @@
 (in-package :clunit)
 
-
 (defun run-test (test &key
                         use-debugger
                         (report-progress t)
