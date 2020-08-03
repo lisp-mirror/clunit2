@@ -13,7 +13,7 @@
 
 (defun report-assertion-progress (type)
   (when *report-progress*
-      (case type
-        (:error (princ #\E *standard-output*))
-        (:fail  (princ #\F *standard-output*))
-        (:pass  (princ #\. *standard-output*)))))
+    (case type
+      (:error (princ #\E *standard-output*))
+      (:fail  (princ #\F *standard-output*))
+      (:pass  (princ #\. *standard-output*)))))
