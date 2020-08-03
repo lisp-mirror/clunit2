@@ -12,7 +12,7 @@
               test-name)))
 
 (defun report-assertion-progress (type)
-  (if *report-progress* ;; TODO use when?
+  (when *report-progress*
       (case type
         (:error (princ #\E *standard-output*))
         (:fail  (princ #\F *standard-output*))
