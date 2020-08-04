@@ -59,3 +59,6 @@ The default value <em>#'equalp</em> is reset at the end of each test/suite run."
 ;; :TAP     =>  Prints the  unit test output in  the most recent version  of TAP (Test
 ;;              Anything Protocol).
 ;;  NIL     =>  Do not print the test results.
+
+(defvar *test-output-stream* *standard-output*
+  "The stream where the output made by tests is printed (default to `*standard-output*')")

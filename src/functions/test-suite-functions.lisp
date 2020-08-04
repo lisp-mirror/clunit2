@@ -21,12 +21,12 @@ fails or an error occurs."
       (restart-case
           (progn
             (if *report-progress*
-                (format t "~%PROGRESS:~%========="))
+                (format *test-output-stream* "~%PROGRESS:~%========="))
             (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
             (execute-test-suite test-suite)
             (when *queued-test-reports*
               (if *report-progress*
-                  (format t "~%~%QUEUED TESTS:~%============="))
+                  (format *test-output-stream* "~%~%QUEUED TESTS:~%============="))
               (process-queued-tests)))
         (cancel-unit-test ()
           :report (lambda (s) (format s "Cancel unit test execution."))
@@ -42,7 +42,7 @@ fails or an error occurs."
                :test-fails failed
                :total-tests (+ errors failed passed))))
     (when print-results-summary
-      (format t "~%~a~%" *clunit-report*))
+      (format *test-output-stream* "~%~a~%" *clunit-report*))
     *clunit-report*))
 
 (defun execute-test-suite (test-suite)
