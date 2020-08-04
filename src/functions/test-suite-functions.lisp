@@ -33,7 +33,7 @@ fails or an error occurs."
           nil)))
     (setf *clunit-equality-test* #'equalp) ; Restore *CLUNIT-EQUALITY-TEST* to its default value
     (when print-results-summary
-      (format print-results-summary "~%~a~%" *clunit-report*))
+      (format t "~%~a~%" *clunit-report*))
     (with-slots (passed failed errors)
         *clunit-report*
       (when (and signal-condition-on-fail
