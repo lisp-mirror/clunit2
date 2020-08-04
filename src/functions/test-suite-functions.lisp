@@ -32,6 +32,8 @@ fails or an error occurs."
           :report (lambda (s) (format s "Cancel unit test execution."))
           nil)))
     (setf *clunit-equality-test* #'equalp) ; Restore *CLUNIT-EQUALITY-TEST* to its default value
+    (when print-results-summary
+      (format *test-output-stream* "~%~a~%" *clunit-report*))
     (with-slots (passed failed errors)
         *clunit-report*
       (when (and signal-condition-on-fail
@@ -41,8 +43,6 @@ fails or an error occurs."
                :test-errors errors
                :test-fails failed
                :total-tests (+ errors failed passed))))
-    (when print-results-summary
-      (format *test-output-stream* "~%~a~%" *clunit-report*))
     *clunit-report*))
 
 (defun execute-test-suite (test-suite)
