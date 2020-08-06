@@ -23,7 +23,7 @@ error occurs."
       (restart-case
           (progn
             (if *report-progress*
-                (format t "~%PROGRESS:~%========="))
+                (format *test-output-stream* "~%PROGRESS:~%========="))
             (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
             (execute-test-case test-case))
         (cancel-unit-test ()
@@ -31,7 +31,7 @@ error occurs."
           nil)))
     (setf *clunit-equality-test* #'equalp)
     (when print-results-summary
-      (format t "~%~a~%" *clunit-report*))
+      (format *test-output-stream* "~%~a~%" *clunit-report*))
     *clunit-report*))
 
 ;; EXECUTE-TEST-CASE Algorithm:
@@ -83,11 +83,11 @@ returns NIL."
 
 (defun queue-test-case ()
   (if *report-progress*
-      (format t "[QUEUED]")))
+      (format *test-output-stream* "[QUEUED]")))
 
 (defun skip-test-case ()
   (if *report-progress*
-      (format t "[SKIPPED]"))
+      (format *test-output-stream* "[SKIPPED]"))
   (incf (slot-value *clunit-report* 'skipped))
   (setf (slot-value *clunit-test-report* 'skipped-p) t))
 

@@ -6,6 +6,7 @@
    ;; Standard functions and macros
    :*clunit-report-format*
    :*clunit-equality-test*
+   :*test-output-stream*
    :clunit-report
    :clunit-test-report
    :deftest
