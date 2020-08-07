@@ -36,7 +36,7 @@ cancelled when any assertion fails or an error occurs."
                                        (first suite-list)
                                        (rest suite-list)))
                              (execute-test-case test-case)))))))
-              (mapc #'process-test-report (slot-value last-report 'test-reports))))
+              (mapc #'process-test-report (test-reports last-report))))
         (cancel-unit-test ()
           :report (lambda (s) (format s "Cancel unit test execution."))
           nil)))

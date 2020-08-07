@@ -97,11 +97,11 @@ hash table *TEST-SUITES*"
 suite called SUITE-NAME."
   (let ((suite (get-test-suite suite-name)))
     (when suite
-      (slot-value suite 'test-cases))))
+      (test-cases suite))))
 
 (defun get-child-suites (suite-name)
   "Returns a  list of all  test suite names  that are children  of the
 suite called SUITE-NAME."
   (let ((suite (get-test-suite suite-name)))
     (when suite
-      (slot-value suite 'child-suites))))
+      (child-suites suite))))

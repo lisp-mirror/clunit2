@@ -72,7 +72,7 @@ The DEFTEST macro has three possible forms:
                      ',name parent)))
        ;; Add test case reference to each of its parent's TEST-CASES slot.
        (loop for parent in ,parent-suites do
-            (pushnew ',name (slot-value (get-test-suite parent) 'test-cases)))
+            (pushnew ',name (test-cases (get-test-suite parent))))
        (setf ,test-function
              (lambda ()
                (block ,name

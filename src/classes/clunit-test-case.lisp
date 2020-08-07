@@ -1,12 +1,16 @@
 (in-package :clunit)
 
-(defclass clunit-test-case ()
+(defclass named-class ()
   ((name
     :initarg  :name
-    :initform nil)
-   (dependencies
+    :initform nil
+    :accessor name)))
+
+(defclass clunit-test-case (named-class)
+  ((dependencies
     :initarg :dependencies
-    :initform (list)
+    :initform ()
+    :accessor dependencies
     :documentation "The DEPENDENCIES slot holds the names of the test cases that
  this test  case depends  on.  Using an  indirect reference  like this
  allows us to easily undefine a test case without much cleaning up.
@@ -16,4 +20,5 @@
  reference is now stale, so we remove the name from the list.")
    (test-function
     :initarg  :test-function
-    :initform nil)))
+    :initform nil
+    :accessor test-function)))

@@ -25,7 +25,7 @@ PARENTS."
        ;; Test for circularity in test hierarchy.
        ;; Add test suite reference to each of its parent's CHILD-SUITES slot.
        (loop for parent in ,parent-list do
-            (pushnew ',name (slot-value (get-test-suite parent) 'child-suites)))
+            (pushnew ',name (child-suites (get-test-suite parent))))
        ;; Create new test suite instance and add it to lookup table.
        (setf (get-test-suite ',name) (make-instance 'clunit-test-suite :name ',name)))))
 

@@ -21,7 +21,6 @@
         (assertion-passed
          #-clisp (format stream "~0I~:@_ok ~A" (incf *tap-test-num*))
          #+clisp (format stream "~-4I~:@_ok ~A" (incf *tap-test-num*)))
-
         (t
          #-clisp (format stream "~0I~:@_not ok ~A~4I~:@_" (incf *tap-test-num*))
          #+clisp (format stream "~-4I~:@_not ok ~A~4I~:@_" (incf *tap-test-num*))

@@ -4,20 +4,25 @@
   ((test-name
     :initform nil
     :initarg :test-name
-    :reader   test-report-name
+    :accessor   test-report-name
     :documentation    "the     reader    function    is     used    in
     test-case-execution-action (see utility functions)")
    (passed-p
     :initform t
     :initarg  :passed-p
-    :reader test-report-passed-p)
+    :reader test-report-passed-p
+    :writer (setf test-report-passed))
    (skipped-p
     :initform nil
-    :initarg  :skipped-p)
+    :initarg  :skipped-p
+    :reader skipped-p
+    :writer (setf skipped-tests))
    (suite-list
-    :initform (list)
-    :initarg  :suite-list)
+    :initform ()
+    :initarg  :suite-list
+    :accessor suite-list)
    (assertion-conditions
-    :initform (list)
+    :initform ()
+    :accessor assertion-conditions
     :documentation "the clunit-test-report instance  is used to store
      the report information for each executed test case.")))

@@ -1,15 +1,14 @@
 (in-package :clunit)
 
-(defclass clunit-test-suite ()
-  ((name
-    :initarg :name
-    :initform nil)
-   (test-cases
+(defclass clunit-test-suite (named-class)
+  ((test-cases
     :initarg  :test-cases
-    :initform (list))
+    :initform ()
+    :accessor  test-cases)
    (child-suites
     :initarg  :child-suites
-    :initform (list)))
+    :initform ()
+    :accessor child-suites))
   (:documentation   "The    slots   test-cases,    child-suites   and
  parent-suites hold  the symbol  names of test  cases and  test suites
  instead of the actual objects.  using an indirect reference like this

@@ -43,7 +43,7 @@ error occurs."
     (let ((*clunit-test-report* (make-instance 'clunit-test-report
                                                :test-name  name
                                                :suite-list *suite-name*)))
-      (push *clunit-test-report* (slot-value *clunit-report* 'test-reports))
+      (push *clunit-test-report* (test-reports *clunit-report*))
       (report-test-progress name *suite-name*)
       (ecase (test-case-execution-action test-case)
         (:run
@@ -85,8 +85,8 @@ returns NIL."
 (defun skip-test-case ()
   (when *report-progress*
     (format *test-output-stream* "[SKIPPED]"))
-  (incf (slot-value *clunit-report* 'skipped))
-  (setf (slot-value *clunit-test-report* 'skipped-p) t))
+  (incf (skipped *clunit-report*))
+  (setf (skipped-tests *clunit-test-report*) t))
 
 (defun test-case-execution-action (test-case)
   "Determines the execution  action for TEST-CASE. If test  case has no
@@ -97,14 +97,14 @@ skipped, then :SKIP is returned.
 
 If test case depends  on test cases that have not yet  run or are also
 queued, then :QUEUE is returned."
-  (unless (slot-value test-case 'dependencies)
+  (unless (dependencies test-case)
     ;; If test case has no dependencies return :RUN
     (return-from test-case-execution-action :run))
   (with-slots (dependencies) test-case
     (tagbody
        (dolist (test dependencies)
          (if (get-test-case test) ; Check if reference is stale.
-             (let ((report (find test (slot-value *clunit-report* 'test-reports)
+             (let ((report (find test (test-reports *clunit-report*)
                                  :test #'eq
                                  :key  #'test-report-name)))
                (cond
@@ -113,8 +113,8 @@ queued, then :QUEUE is returned."
                   (go :queue))
                  ((member report *queued-test-reports*) ; Test we depend on is also queued.
                   (go :queue))
-                 ((or (slot-value report 'skipped-p)
-                      (not (slot-value report 'passed-p)))
+                 ((or (skipped-p report)
+                      (not (test-report-passed-p report)))
                   (go :skip))))
              ;; Delete stale reference. References become stale when a test case is undef'ed.
              (setf dependencies (delete test dependencies))))
@@ -141,7 +141,7 @@ queued, then :QUEUE is returned."
                      (report-test-progress test-name *suite-name*)
                      (push test-report processed-reports)
                    (let ((*suite-name* suite-list))
-                     (funcall (slot-value test-case 'test-function))))
+                     (funcall (test-function test-case))))
                  (:skip
                   (report-test-progress test-name *suite-name*)
                   (push test-report processed-reports)
