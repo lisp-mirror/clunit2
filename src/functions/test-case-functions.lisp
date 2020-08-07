@@ -10,29 +10,26 @@ test progress is reported. If USE-DEBUGGER is non-NIL, the debugger is
 invoked whenever an assertion fails.   If STOP-ON-FAIL is non-NIL, the
 rest of  the unit  test is  cancelled when any  assertion fails  or an
 error occurs."
-  (let ((*clunit-report* (make-instance 'clunit-report))
-        (*report-progress* report-progress)
-        (test-case (get-test-case test))
-        (*use-debugger* use-debugger)
-        (*stop-on-fail* stop-on-fail))
-    (unless test-case
-      (error "Test case ~S is not defined." test))
-    (handler-bind ((error #'handle-error)
-                   (warning #'muffle-warning)
-                   (assertion-condition #'handle-assertion))
-      (restart-case
-          (progn
-            (when *report-progress*
-              (format *test-output-stream* "~%PROGRESS:~%========="))
-            (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
-            (execute-test-case test-case))
-        (cancel-unit-test ()
-          :report (lambda (s) (format s "Cancel unit test execution."))
-          nil)))
-    (setf *clunit-equality-test* #'equalp)
-    (when print-results-summary
-      (format *test-output-stream* "~%~a~%" *clunit-report*))
-    *clunit-report*))
+  (with-prepare-specials-for-testing (report-progress use-debugger stop-on-fail)
+    (let ((test-case (get-test-case test)))
+      (unless test-case
+        (error "Test case ~S is not defined." test))
+      (handler-bind ((error #'handle-error)
+                     (warning #'muffle-warning)
+                     (assertion-condition #'handle-assertion))
+        (restart-case
+            (progn
+              (when *report-progress*
+                (format *test-output-stream* "~%PROGRESS:~%========="))
+              (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
+              (execute-test-case test-case))
+          (cancel-unit-test ()
+            :report (lambda (s) (format s "Cancel unit test execution."))
+            nil)))
+      (setf *clunit-equality-test* #'equalp)
+      (when print-results-summary
+        (format *test-output-stream* "~%~a~%" *clunit-report*))
+      *clunit-report*)))
 
 ;; EXECUTE-TEST-CASE Algorithm:
 ;; 1. Create a CLUNIT-TEST-REPORT instance.

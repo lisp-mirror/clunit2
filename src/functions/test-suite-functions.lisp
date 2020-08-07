@@ -8,42 +8,39 @@ the  test  progress  is  reported. If  USE-DEBUGGER  is  non-NIL,  the
 debugger is invoked  whenever an assertion fails.   If STOP-ON-FAIL is
 non-NIL, the  rest of the  unit test  is cancelled when  any assertion
 fails or an error occurs."
-  (let ((*clunit-report* (make-instance 'clunit-report))
-        (*report-progress* report-progress)
-        (test-suite (get-test-suite suite))
-        (*use-debugger* use-debugger)
-        (*stop-on-fail* stop-on-fail))
-    (unless test-suite
-      (error "Test suite ~S is not defined." suite))
-    (handler-bind ((error #'handle-error)
-                   (warning #'muffle-warning)
-                   (assertion-condition #'handle-assertion))
-      (restart-case
-          (progn
-            (when *report-progress*
-              (format *test-output-stream* "~%PROGRESS:~%========="))
-            (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
-            (execute-test-suite test-suite)
-            (when *queued-test-reports*
+  (with-prepare-specials-for-testing (report-progress use-debugger stop-on-fail)
+    (let ((test-suite (get-test-suite suite)))
+      (unless test-suite
+        (error "Test suite ~S is not defined." suite))
+      (handler-bind ((error #'handle-error)
+                     (warning #'muffle-warning)
+                     (assertion-condition #'handle-assertion))
+        (restart-case
+            (progn
               (when *report-progress*
-                (format *test-output-stream* "~%~%QUEUED TESTS:~%============="))
-              (process-queued-tests)))
-        (cancel-unit-test ()
-          :report (lambda (s) (format s "Cancel unit test execution."))
-          nil)))
-    (setf *clunit-equality-test* #'equalp) ; Restore *CLUNIT-EQUALITY-TEST* to its default value
-    (when print-results-summary
-      (format *test-output-stream* "~%~a~%" *clunit-report*))
-    (with-slots (passed failed errors)
-        *clunit-report*
-      (when (and signal-condition-on-fail
-                 (or (plusp failed)
-                     (plusp errors)))
-        (error 'test-suite-failure
-               :test-errors errors
-               :test-fails failed
-               :total-tests (+ errors failed passed))))
-    *clunit-report*))
+                (format *test-output-stream* "~%PROGRESS:~%========="))
+              (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
+              (execute-test-suite test-suite)
+              (when *queued-test-reports*
+                (when *report-progress*
+                  (format *test-output-stream* "~%~%QUEUED TESTS:~%============="))
+                (process-queued-tests)))
+          (cancel-unit-test ()
+            :report (lambda (s) (format s "Cancel unit test execution."))
+            nil)))
+      (setf *clunit-equality-test* #'equalp) ; Restore *CLUNIT-EQUALITY-TEST* to its default value
+      (when print-results-summary
+        (format *test-output-stream* "~%~a~%" *clunit-report*))
+      (with-slots (passed failed errors)
+          *clunit-report*
+        (when (and signal-condition-on-fail
+                   (or (plusp failed)
+                       (plusp errors)))
+          (error 'test-suite-failure
+                 :test-errors errors
+                 :test-fails failed
+                 :total-tests (+ errors failed passed))))
+      *clunit-report*)))
 
 (defun execute-test-suite (test-suite)
   (with-slots (name test-cases child-suites) test-suite

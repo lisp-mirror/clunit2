@@ -13,10 +13,7 @@ non-NIL, the debugger is invoked whenever an assertion fails.
 
 If  STOP-ON-FAIL  is  non-NIL,  the  rest of  the  unit  test  is
 cancelled when any assertion fails or an error occurs."
-  (let ((*clunit-report* (make-instance 'clunit-report))
-        (*report-progress* report-progress)
-        (*use-debugger* use-debugger)
-        (*stop-on-fail* stop-on-fail))
+  (with-prepare-specials-for-testing (report-progress use-debugger stop-on-fail)
     (handler-bind ((error #'handle-error)
                    (warning #'muffle-warning)
                    (assertion-condition #'handle-assertion))
@@ -29,11 +26,15 @@ cancelled when any assertion fails or an error occurs."
             (flet ((process-test-report (test-report)
                      (with-slots (test-name suite-list passed-p) test-report
                        (unless passed-p
-                         (let ((test-case (get-test-case test-name)) (*suite-name* suite-list))
+                         (let ((test-case    (get-test-case test-name))
+                               (*suite-name* suite-list))
                            (when test-case
                              (when *report-progress*
-                               (format *test-output-stream* "~%~VT~S~{~^ -> ~S~}: (Test Suite)"
-                                       *tab-width* (first suite-list) (rest suite-list)))
+                               (format *test-output-stream*
+                                       "~%~VT~S~{~^ -> ~S~}: (Test Suite)"
+                                       *tab-width*
+                                       (first suite-list)
+                                       (rest suite-list)))
                              (execute-test-case test-case)))))))
               (mapc #'process-test-report (slot-value last-report 'test-reports))))
         (cancel-unit-test ()
