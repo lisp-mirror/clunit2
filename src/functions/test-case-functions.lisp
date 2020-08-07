@@ -21,7 +21,8 @@ error occurs."
             (progn
               (when *report-progress*
                 (format *test-output-stream* "~%PROGRESS:~%========="))
-              (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
+              (setf *queued-test-reports* (list)
+                    *last-clunit-report* *clunit-report*)
               (execute-test-case test-case))
           (cancel-unit-test ()
             :report (lambda (s) (format s "Cancel unit test execution."))
@@ -51,8 +52,7 @@ error occurs."
         (:skip
          (skip-test-case))
         (:queue
-         (queue-test-case)
-         (push *clunit-test-report* *queued-test-reports*))))))
+         (queue-test-case))))))
 
 (defun get-test-case (name)
   "Retrieves the  TEST-CASE instance associated  with the key  NAME in
@@ -80,7 +80,8 @@ returns NIL."
 
 (defun queue-test-case ()
   (when *report-progress*
-    (format *test-output-stream* "[QUEUED]")))
+    (format *test-output-stream* "[QUEUED]"))
+  (push *clunit-test-report* *queued-test-reports*))
 
 (defun skip-test-case ()
   (when *report-progress*
