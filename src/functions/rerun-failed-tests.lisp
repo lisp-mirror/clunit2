@@ -31,9 +31,9 @@ cancelled when any assertion fails or an error occurs."
                        (unless passed-p
                          (let ((test-case (get-test-case test-name)) (*suite-name* suite-list))
                            (when test-case
-                             (if *report-progress*
-                                 (format *test-output-stream* "~%~VT~S~{~^ -> ~S~}: (Test Suite)"
-                                         *tab-width* (first suite-list) (rest suite-list)))
+                             (when *report-progress*
+                               (format *test-output-stream* "~%~VT~S~{~^ -> ~S~}: (Test Suite)"
+                                       *tab-width* (first suite-list) (rest suite-list)))
                              (execute-test-case test-case)))))))
               (mapc #'process-test-report (slot-value last-report 'test-reports))))
         (cancel-unit-test ()

@@ -1,15 +1,15 @@
 (in-package :clunit)
 
 (defun report-suite-progress (suite suite-list)
-  (if *report-progress*
-      (format *test-output-stream* "~%~%~VT~A: (Test Suite)"
-              (* *tab-width* (1+ (length suite-list))) suite)))
+  (when *report-progress*
+    (format *test-output-stream* "~%~%~VT~A: (Test Suite)"
+            (* *tab-width* (1+ (length suite-list))) suite)))
 
 (defun report-test-progress (test-name suite-list)
-  (if *report-progress*
-      (format *test-output-stream* "~%~VT~A: " (* *tab-width*
-                                               (1+ (length suite-list)))
-              test-name)))
+  (when *report-progress*
+    (format *test-output-stream* "~%~VT~A: " (* *tab-width*
+                                                (1+ (length suite-list)))
+            test-name)))
 
 (defun report-assertion-progress (type)
   (flet ((print-char (char)

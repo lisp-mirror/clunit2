@@ -22,8 +22,8 @@ error occurs."
                    (assertion-condition #'handle-assertion))
       (restart-case
           (progn
-            (if *report-progress*
-                (format *test-output-stream* "~%PROGRESS:~%========="))
+            (when *report-progress*
+              (format *test-output-stream* "~%PROGRESS:~%========="))
             (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
             (execute-test-case test-case))
         (cancel-unit-test ()
@@ -73,21 +73,21 @@ hash table *TEST-CASES*"
   (remhash name *test-case-hashtable*))
 
 (defun defined-test-p (test-name)
-  "Returns T  if a  test case called  TEST-NAME is  defined, otherwise
+  "Returns non-nil  if a  test case called  TEST-NAME is  defined, otherwise
 returns NIL."
-  (if (get-test-case test-name) t nil))
+  (get-test-case test-name))
 
 (defun get-defined-tests ()
   "Returns a list of all defined test case names."
   (loop for key being the hash-key of *test-case-hashtable* collect key))
 
 (defun queue-test-case ()
-  (if *report-progress*
-      (format *test-output-stream* "[QUEUED]")))
+  (when *report-progress*
+    (format *test-output-stream* "[QUEUED]")))
 
 (defun skip-test-case ()
-  (if *report-progress*
-      (format *test-output-stream* "[SKIPPED]"))
+  (when *report-progress*
+    (format *test-output-stream* "[SKIPPED]"))
   (incf (slot-value *clunit-report* 'skipped))
   (setf (slot-value *clunit-test-report* 'skipped-p) t))
 

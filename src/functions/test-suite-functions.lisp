@@ -20,13 +20,13 @@ fails or an error occurs."
                    (assertion-condition #'handle-assertion))
       (restart-case
           (progn
-            (if *report-progress*
-                (format *test-output-stream* "~%PROGRESS:~%========="))
+            (when *report-progress*
+              (format *test-output-stream* "~%PROGRESS:~%========="))
             (setf *queued-test-reports* (list) *last-clunit-report* *clunit-report*)
             (execute-test-suite test-suite)
             (when *queued-test-reports*
-              (if *report-progress*
-                  (format *test-output-stream* "~%~%QUEUED TESTS:~%============="))
+              (when *report-progress*
+                (format *test-output-stream* "~%~%QUEUED TESTS:~%============="))
               (process-queued-tests)))
         (cancel-unit-test ()
           :report (lambda (s) (format s "Cancel unit test execution."))
@@ -86,9 +86,9 @@ NAME."
   (setf (gethash name *test-suite-hashtable*) new-test-suite))
 
 (defun defined-suite-p (suite-name)
-  "Returns T if  a test suite called SUITE-NAME  is defined, otherwise
-returns NIL."
-  (if (get-test-suite suite-name) t nil))
+  "Returns  non-nil if  a  test suite  called  SUITE-NAME is  defined,
+otherwise returns NIL."
+  (get-test-suite suite-name))
 
 (defun delete-test-suite (name)
   "Deletes the TEST-SUITE instance associated with the key NAME in the
@@ -99,12 +99,12 @@ hash table *TEST-SUITES*"
   "Returns a  list of  all test  case names that  are children  of the
 suite called SUITE-NAME."
   (let ((suite (get-test-suite suite-name)))
-    (if suite
-        (slot-value suite 'test-cases))))
+    (when suite
+      (slot-value suite 'test-cases))))
 
 (defun get-child-suites (suite-name)
   "Returns a  list of all  test suite names  that are children  of the
 suite called SUITE-NAME."
   (let ((suite (get-test-suite suite-name)))
-    (if suite
-        (slot-value suite 'child-suites))))
+    (when suite
+      (slot-value suite 'child-suites))))
