@@ -49,7 +49,10 @@
   (with-slots (test-name assertion-conditions) report
     (dolist (condition assertion-conditions)
       (unless (typep condition 'assertion-passed)
-        (format stream "~:@_~A: ~<~:W~:>~:@_" test-name condition)))))
+        #+abcl
+        (pprint-logical-block (stream nil)
+          (format stream "~:@_~A: ~<~:W~:>~:@_" test-name condition))
+        #-abcl (format stream "~:@_~A: ~<~:W~:>~:@_" test-name condition)))))
 
 (defmethod print-format ((condition assertion-error) (format (eql :default)) stream)
   (pprint-logical-block (stream nil)
