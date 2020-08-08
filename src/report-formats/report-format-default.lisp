@@ -16,7 +16,7 @@
                               (first suite) (rest suite))
               #+clisp (format stream "~-4I~:@_~:@_~A~{~^ -> ~A~}: (Test Suite)~4I"
                               (first suite) (rest suite)))
-            (format stream "~:W" report))))
+            (print-format report format stream))))
       #-clisp (format stream  "~:@_~I~:@_SUMMARY:~:@_========")
       #+clisp (format stream  "~:@_~-8I~:@_SUMMARY:~:@_========")
       (let ((total (+ passed failed errors)))
@@ -49,10 +49,9 @@
   (with-slots (test-name assertion-conditions) report
     (dolist (condition assertion-conditions)
       (unless (typep condition 'assertion-passed)
-        #+abcl
-        (pprint-logical-block (stream nil)
-          (format stream "~:@_~A: ~<~:W~:>~:@_" test-name condition))
-        #-abcl (format stream "~:@_~A: ~<~:W~:>~:@_" test-name condition)))))
+        (format stream "~:@_~A: " test-name)
+        (print-format condition format stream)
+        (format stream "~:@_")))))
 
 (defmethod print-format ((condition assertion-error) (format (eql :default)) stream)
   (pprint-logical-block (stream nil)
