@@ -17,5 +17,5 @@
     (when *report-progress*
       (case type
         (:error (print-char #\E))
-        (:fail  (print-char #\E))
+        (:fail  (print-char #\F))
         (:pass  (print-char #\.))))))
