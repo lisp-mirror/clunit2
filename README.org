@@ -30,27 +30,28 @@ Check out the comprehensive [[http://tgutu.github.com/clunit][CLUnit Tutorial]].
 
 #+BEGIN_SRC lisp
   (ql:quickload "clunit")
+
   (use-package :clunit)
 
   ;; Test suite for all number operation tests.
-  (defsuite NumberSuite ())
+  (defsuite number-suite ())
 
   ;; Test suite for floating point operations
-  (defsuite FloatSuite (NumberSuite))
+  (defsuite float-suite (number-suite))
 
-  (defsuite IntegerSuite (NumberSuite))
+  (defsuite integer-suite (number-suite))
 
   ;; Define a test called TEST-INT1
-  (deftest test-int1 (IntegerSuite)
+  (deftest test-int1 (integer-suite)
     (assert-true  (= 1 1))
     (assert-equalp 4 (+ 2 2)))
 
   ;; Define a test called TEST-FLOAT1
-  (deftest test-float1 (FloatSuite)
+  (deftest test-float1 (float-suite)
     (assert-true (= 1.0 -1.0))
     (assert-equalp 4.0 (+ 2.0 2.0)))
 
-  (run-suite 'NumberSuite)
+  (run-suite 'number-suite)
 
 #+END_SRC
 
@@ -60,18 +61,18 @@ which produces the output:
 PROGRESS:
 =========
 
-    NUMBERSUITE: (Test Suite)
+    NUMBER-SUITE: (Test Suite)
 
-        INTEGERSUITE: (Test Suite)
+        INTEGER-SUITE: (Test Suite)
             TEST-INT1: ..
 
-        FLOATSUITE: (Test Suite)
+        FLOAT-SUITE: (Test Suite)
             TEST-FLOAT1: F.
 
 FAILURE DETAILS:
 ================
 
-    NUMBERSUITE -> FLOATSUITE: (Test Suite)
+    NUMBER-SUITE -> FLOAT-SUITE: (Test Suite)
         TEST-FLOAT1: Expression: (= 1.0 -1.0)
                      Expected: T
                      Returned: NIL
