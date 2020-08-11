@@ -4,7 +4,8 @@
   ((name
     :initarg  :name
     :initform nil
-    :accessor name)))
+    :accessor name))
+  (:documentation "A class for object with an identifier (the slot 'name')"))
 
 (defclass clunit-test-case (named-class)
   ((dependencies
@@ -21,4 +22,6 @@
    (test-function
     :initarg  :test-function
     :initform nil
-    :accessor test-function)))
+    :accessor test-function
+    :documentation "The actual test, a function with no arguments that
+    returns non nil if the test passed")))

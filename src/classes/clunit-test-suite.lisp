@@ -4,7 +4,9 @@
   ((test-cases
     :initarg  :test-cases
     :initform ()
-    :accessor  test-cases)
+    :accessor  test-cases
+    :documentation  "The tests  that belongs  to this  suite (list  of
+    symbols)"
    (child-suites
     :initarg  :child-suites
     :initform ()

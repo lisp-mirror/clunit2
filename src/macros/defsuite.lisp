@@ -9,7 +9,13 @@
 (defmacro defsuite (name parents)
   "Defines a  test suite called NAME.  If PARENTS is non-NIL  the test
 suite  is  defined as  a  sub-suite  of each  of  the  test suites  in
-PARENTS."
+PARENTS.
+
+Example:
+
+(defsuite arithmetic ())
+
+(defsuite arithmetic-+ (arithmetic))"
   (with-gensyms (parent-list)
     `(let ((,parent-list ',parents))
        (unless (symbolp ',name)

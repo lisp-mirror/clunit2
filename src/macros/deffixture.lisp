@@ -47,7 +47,14 @@ SUITE  at  runtime.. The  test  case  body  is plugged  into  the
 template at the position identified by PLUG.
 
 Fixtures are expanded  at runtime, so the fixture  that will wrap
-around a test depends on the test suite call stack."
+around a test depends on the test suite call stack.
+
+Example:
+
+ (deffixture arithmetic (@body) ; @body is the plug
+  (let ((x 0) (y 1) (z 2))
+    @body))
+"
   `(handler-bind ((warning #'muffle-warning))
      ;; Test that fixture is being defined for a SUITE subclass.
      (unless (get-test-suite ',suite)

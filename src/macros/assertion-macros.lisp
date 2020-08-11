@@ -13,38 +13,38 @@
                              :forms (list ,@(form-expander forms)))))))
 
 (defun form-expander (forms)
-  ;; FORM-EXPANDER  manipulates  the  list  of forms  provided  to  an
-  ;; assertion  form, e.g.  (defmacro  assert-false (expression  &rest
-  ;; forms) . body)
+"FORM-EXPANDER  manipulates  the  list  of forms  provided  to  an
+ assertion  form, e.g.  (defmacro  assert-false (expression  &rest
+ forms) . body)
 
-  ;; The members of  the forms list are printed out  when an assertion
-  ;; test fails.  The example  below, shows the  debug output  when an
-  ;; assertion form fails.
-  ;;
-  ;; (let ((x 1) (y 2) (z 3))
-  ;;       ;;forms = '(x y "Comment: This is meant to fail." z)
-  ;;       (assert-true (= x y z) x y "Comment: This is meant to fail." z))
-  ;;
-  ;;      ======== Debug output ===========
-  ;;      Expression: (= x y z)
-  ;;      Expected: T
-  ;;      Returned: NIL
-  ;;      x => 1
-  ;;  y => 2
-  ;;  Comment: This is meant to fail.
-  ;;      z => 3
-  ;;      ==================================
-  ;;      As  you   can  see,  the   reporting  is  somehow   able  to
-  ;;      differentiate between  the symbols  x, y,  z and  the string
-  ;;      comment.
-  ;;      This is achieved by expanding '(x y "Comment..." z) => (T 'x
-  ;;      x T 'y y NIL "Comment..." T 'z z)
-  ;;      The T or NIL symbol  tells the reporting function whether to
-  ;;      report the next two values as a pair or not.
-  ;;      I went  at great  lengths to explain  this because  WHAT the
-  ;;      function does is straight forward  from the code, but WHY it
-  ;;      does it
-  ;;      isn't too obvious unless someone tells you :o)
+ The members of  the forms list are printed out  when an assertion
+ test fails.  The example  below, shows the  debug output  when an
+ assertion form fails.
+
+ (let ((x 1) (y 2) (z 3))
+       ;;forms = '(x y \"Comment: This is meant to fail.\" z)
+       (assert-true (= x y z) x y \"Comment: This is meant to fail.\" z))
+
+      ======== Debug output ===========
+      Expression: (= x y z)
+      Expected: T
+      Returned: NIL
+      x => 1
+  y => 2
+  Comment: This is meant to fail.
+      z => 3
+      ==================================
+      As  you   can  see,  the   reporting  is  somehow   able  to
+      differentiate between  the symbols  x, y,  z and  the string
+      comment.
+      This is achieved by expanding '(x y \"Comment...\" z) => (T 'x
+      x T 'y y NIL \"Comment...\" T 'z z)
+      The T or NIL symbol  tells the reporting function whether to
+      report the next two values as a pair or not.
+      I went  at great  lengths to explain  this because  WHAT the
+      function does is straight forward  from the code, but WHY it
+      does it
+      isn't too obvious unless someone tells you :o)"
   (loop for form  in forms
      if (typep form 'string)
      collect nil and collect form
@@ -56,7 +56,11 @@
 returns any non-NIL  value. FORMS and their values are  printed if the
 test fails.  Remember in Common Lisp any non-NIL value is true, if you
 want  a strict  binary  assertion test  use  (assert-eq t  expression)
-instead."
+instead.
+
+Example:
+
+(assert-true (= 1 1)) ; This assertion passes."
   (with-gensyms (result)
     (assertion-expander :result            result
                         :test              result
@@ -220,10 +224,14 @@ Example:
 ;; Force assertion failure.
 (defun assert-fail (format-string &rest args)
   "Calling this function is equivalent to signalling a failed assertion.
-The FORMAT-STRING and ARGS are used to print the failure message as follows:
+The FORMAT-STRING  and ARGS are used  to print the failure  message as
+follows:
 
   (format stream \"~?\" format-string args)
-If you want to achieve a nice looking output message, use pretty printing directives in the format string e.g. \"~:@_\" instead of \"%\"."
+
+If  you want  to achieve  a nice  looking output  message, use  pretty
+printing  directives in  the format  string e.g.  \"~:@_\" instead  of
+\"%\"."
   (with-assert-restart
     (signal-assertion :fail-forced
                       :format-string format-string

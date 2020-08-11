@@ -4,10 +4,16 @@
                           signal-condition-on-fail
                           (print-results-summary t))
   "Executes a  test case called  SUITE. If REPORT-PROGRESS  is non-NIL,
-the  test  progress  is  reported. If  USE-DEBUGGER  is  non-NIL,  the
-debugger is invoked  whenever an assertion fails.   If STOP-ON-FAIL is
-non-NIL, the  rest of the  unit test  is cancelled when  any assertion
-fails or an error occurs."
+the  test  progress  is  reported.
+
+If  USE-DEBUGGER  is non-NIL,  the  debugger  is invoked  whenever  an
+assertion fails.
+
+If STOP-ON-FAIL  is non-NIL, the  rest of  the unit test  is cancelled
+when any assertion fails or an error occurs.
+
+if PRINT-RESULTS-SUMMARY  is non nil  the summary results of  tests is
+printed on the standard output."
   (with-prepare-specials-for-testing (report-progress use-debugger stop-on-fail)
     (let ((test-suite (get-test-suite suite)))
       (unless test-suite

@@ -12,7 +12,10 @@ non-NIL,  the  test progress  is  reported.   If USE-DEBUGGER  is
 non-NIL, the debugger is invoked whenever an assertion fails.
 
 If  STOP-ON-FAIL  is  non-NIL,  the  rest of  the  unit  test  is
-cancelled when any assertion fails or an error occurs."
+cancelled when any assertion fails or an error occurs.
+
+If PRINT-RESULTS-SUMMARY  is non nil  the summary results of  tests is
+printed on the standard output."
   (with-prepare-specials-for-testing (report-progress use-debugger stop-on-fail)
     (handler-bind ((error #'handle-error)
                    (warning #'muffle-warning)

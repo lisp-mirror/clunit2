@@ -5,11 +5,18 @@
                         (report-progress t)
                         stop-on-fail
                         (print-results-summary t))
-  "Executes a test case called TEST. If REPORT-PROGRESS is non-NIL, the
-test progress is reported. If USE-DEBUGGER is non-NIL, the debugger is
-invoked whenever an assertion fails.   If STOP-ON-FAIL is non-NIL, the
-rest of  the unit  test is  cancelled when any  assertion fails  or an
-error occurs."
+  "Executes a test case called `test'.
+
+If REPORT-PROGRESS is non-NIL, the test progress is reported.
+
+If  USE-DEBUGGER  is non-NIL,  the  debugger  is invoked  whenever  an
+assertion fails.
+
+If STOP-ON-FAIL  is non-NIL, the  rest of  the unit test  is cancelled
+when any assertion fails or an error occurs.
+
+If PRINT-RESULTS-SUMMARY  is non nil  the summary results of  tests is
+printed on the standard output."
   (with-prepare-specials-for-testing (report-progress use-debugger stop-on-fail)
     (let ((test-case (get-test-case test)))
       (unless test-case
@@ -79,11 +86,13 @@ returns NIL."
   (loop for key being the hash-key of *test-case-hashtable* collect key))
 
 (defun queue-test-case ()
+  "Enqueue a test."
   (when *report-progress*
     (format *test-output-stream* "[QUEUED]"))
   (push *clunit-test-report* *queued-test-reports*))
 
 (defun skip-test-case ()
+  "Skip a test."
   (when *report-progress*
     (format *test-output-stream* "[SKIPPED]"))
   (incf (skipped *clunit-report*))

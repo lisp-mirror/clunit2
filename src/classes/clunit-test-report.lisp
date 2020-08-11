@@ -11,16 +11,19 @@
     :initform t
     :initarg  :passed-p
     :reader test-report-passed-p
-    :writer (setf test-report-passed))
+    :writer (setf test-report-passed)
+    :documentation "Non-nil if the report passed")
    (skipped-p
     :initform nil
     :initarg  :skipped-p
     :reader skipped-p
-    :writer (setf skipped-tests))
+    :writer (setf skipped-tests)
+    :documentation "Non-nil if the test was skipped")
    (suite-list
     :initform ()
     :initarg  :suite-list
-    :accessor suite-list)
+    :accessor suite-list
+    :documentation "A list of the suites this test belong.")
    (assertion-conditions
     :initform ()
     :accessor assertion-conditions
