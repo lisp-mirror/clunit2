@@ -42,12 +42,12 @@ Check out the comprehensive [[http://tgutu.github.com/clunit][CLUnit Tutorial]].
   (defsuite integer-suite (number-suite))
 
   ;; Define a test called TEST-INT1
-  (deftest test-int1 (integer-suite)
+  (deftest test-int-1 (integer-suite)
     (assert-true  (= 1 1))
     (assert-equalp 4 (+ 2 2)))
 
   ;; Define a test called TEST-FLOAT1
-  (deftest test-float1 (float-suite)
+  (deftest test-float-1 (float-suite)
     (assert-true (= 1.0 -1.0))
     (assert-equalp 4.0 (+ 2.0 2.0)))
 
@@ -64,18 +64,18 @@ PROGRESS:
     NUMBER-SUITE: (Test Suite)
 
         INTEGER-SUITE: (Test Suite)
-            TEST-INT1: ..
+            TEST-INT-1: ..
 
         FLOAT-SUITE: (Test Suite)
-            TEST-FLOAT1: F.
+            TEST-FLOAT-1: F.
 
 FAILURE DETAILS:
 ================
 
     NUMBER-SUITE -> FLOAT-SUITE: (Test Suite)
-        TEST-FLOAT1: Expression: (= 1.0 -1.0)
-                     Expected: T
-                     Returned: NIL
+        TEST-FLOAT-1: Expression: (= 1.0 -1.0)
+                      Expected: T
+                      Returned: NIL
 
 
 SUMMARY:

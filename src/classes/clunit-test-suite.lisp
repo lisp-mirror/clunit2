@@ -6,7 +6,7 @@
     :initform ()
     :accessor  test-cases
     :documentation  "The tests  that belongs  to this  suite (list  of
-    symbols)"
+    symbols)")
    (child-suites
     :initarg  :child-suites
     :initform ()
