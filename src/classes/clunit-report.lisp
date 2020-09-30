@@ -15,7 +15,7 @@
    (passed
     :initform 0
     :initarg  :passed
-    :accessor failed
+    :accessor passed
     :documentation "The number of tests that passed during test executions.")
    (skipped
     :initform 0
