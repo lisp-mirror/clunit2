@@ -7,8 +7,12 @@
        (if ,test
            (signal-assertion :pass)
            (signal-assertion :fail
-                             :returned ,result
-                             :expected ',expected
+                             :returned   (if (and (listp ',expected)
+                                                  (eq (first ',expected)
+                                                      'values))
+                                             `(values ,@,result)
+                                             ,result)
+                             :expected   ',expected
                              :expression ',report-expression
                              :forms (list ,@(form-expander forms)))))))
 
@@ -140,8 +144,9 @@ if (EQUALP VALUE EXPRESSION) values non nil. FORMS and their values are
 printed if the test fails."
   (with-gensyms (result)
     (assertion-expander :result            result
-                        :test              `(equalp ,value ,result)
-                        :result-expression expression
+                        :test              `(equalp (multiple-value-list ,value)
+                                                    ,result)
+                        :result-expression `(multiple-value-list ,expression)
                         :report-expression `(equalp ,value ,expression)
                         :expected          value
                         :forms             forms)))
