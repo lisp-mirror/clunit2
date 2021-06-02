@@ -70,6 +70,8 @@
         <p>
           Evaluates EXPRESSION as an assertion, an assertion passes if (EQ VALUE EXPRESSION) returns true.
           FORMS and their values are printed if the test fails.
+
+          If EXPRESSION returns multiple-values each element is tested 'eq with each element of VALUE.
         </p>
       </description>
     </symbol>
@@ -82,6 +84,7 @@
         <p>
           Evaluates EXPRESSION as an assertion, an assertion passes if (EQL VALUE EXPRESSION) returns true.
           FORMS and their values are printed if the test fails.
+          If EXPRESSION returns multiple-values each element is tested 'eql with each element of VALUE.
         </p>
       </description>
     </symbol>
@@ -119,6 +122,8 @@
         <p>
           Evaluates EXPRESSION as an assertion, an assertion passes if (EQUALP VALUE EXPRESSION) returns true.
           FORMS and their values are printed if the test fails.
+
+          If EXPRESSION returns multiple-values each element is tested 'equalp with each element of VALUE.
         </p>
       </description>
     </symbol>
@@ -133,6 +138,7 @@
           Evaluates EXPRESSION as an assertion, an assertion passes if (FUNCALL TEST VALUE EXPRESSION) returns true.
           FORMS and their values are printed if the test fails.<br/>
           <code>(assert-equality #'string= "some string" "another string") ; This assertion fails.</code>
+          If EXPRESSION returns multiple-values each element is tested with each element of VALUE.
         </p>
       </description>
     </symbol>
@@ -149,6 +155,7 @@
             (let ((*clunit-equality-test* #'string=))<br/>
             &#160;&#160;&#160;(assert-equality* "some string" "another string")) ; This assertion fails.
           </code>
+          If EXPRESSION returns multiple-values each element is tested using *CLUNIT-EQUALITY-TEST* with each element of VALUE.
         </p>
       </description>
     </symbol>

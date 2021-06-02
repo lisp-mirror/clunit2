@@ -24,7 +24,9 @@ testing experience:
   [[http://en.wikipedia.org/wiki/Test_Anything_Protocol]["Test Anything Protocol" (TAP)]] output.
 + Released under MIT license
 
-Check out the comprehensive [[http://tgutu.github.com/clunit][CLUnit Tutorial]].
+Check out the comprehensive
+[[http://tgutu.github.io/clunit][CLUnit Tutorial]]
+[[https://web.archive.org/web/20200929000204/https://tgutu.github.io/clunit/][archived URL]].
 
 * Example
 
@@ -51,42 +53,51 @@ Check out the comprehensive [[http://tgutu.github.com/clunit][CLUnit Tutorial]].
     (assert-true (= 1.0 -1.0))
     (assert-equalp 4.0 (+ 2.0 2.0)))
 
+  ;; expressions returning multiple value van be tested too
+  (defun approx-equal (a b) (< (- a 0.1) b (+ a 0.1)))
+
+  (deftest test-float-2 (float-suite)
+    (assert-equality #'approx-equal
+        (values 1 0.5)
+        (floor 1.5)))
+
   (run-suite 'number-suite)
 
 #+END_SRC
 
 which produces the output:
 
-#+BEGIN_SRC
-PROGRESS:
-=========
+#+BEGIN_SRC text
+  PROGRESS:
+  =========
 
-    NUMBER-SUITE: (Test Suite)
+      NUMBER-SUITE: (Test Suite)
 
-        INTEGER-SUITE: (Test Suite)
-            TEST-INT-1: ..
+          INTEGER-SUITE: (Test Suite)
+              TEST-INT-1: ..
 
-        FLOAT-SUITE: (Test Suite)
-            TEST-FLOAT-1: F.
+          FLOAT-SUITE: (Test Suite)
+              TEST-FLOAT-2: .
+              TEST-FLOAT-1: F.
 
-FAILURE DETAILS:
-================
+  FAILURE DETAILS:
+  ================
 
-    NUMBER-SUITE -> FLOAT-SUITE: (Test Suite)
-        TEST-FLOAT-1: Expression: (= 1.0 -1.0)
-                      Expected: T
-                      Returned: NIL
+      NUMBER-SUITE -> FLOAT-SUITE: (Test Suite)
+          TEST-FLOAT-1: Expression: (= 1.0 -1.0)
+                        Expected: T
+                        Returned: NIL
 
 
-SUMMARY:
-========
-    Test functions:
-        Executed: 2
-        Skipped:  0
+  SUMMARY:
+  ========
+      Test functions:
+          Executed: 3
+          Skipped:  0
 
-    Tested 4 assertions.
-        Passed: 3/4 some tests not passed
-        Failed: 1/4 some tests failed
+      Tested 5 assertions.
+          Passed: 4/5 some tests not passed
+          Failed: 1/5 some tests failed
 #+END_SRC
 
 * Tests and assertions
