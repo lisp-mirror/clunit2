@@ -61,7 +61,7 @@
 (defmethod print-format ((condition assertion-failed) (format (eql :default)) stream)
   (pprint-logical-block (stream nil)
     (with-slots (expression expected returned forms) condition
-      (format stream "Expression: ~S~:@_Expected: ~A~:@_Returned: ~A~{~^~:@_~:[~A~;~S => ~S~]~}"
+      (format stream "Expression: ~S~:@_Expected: ~S~:@_Returned: ~S~{~^~:@_~:[~A~;~S => ~S~]~}"
               expression expected returned forms))))
 
 (defmethod print-format ((condition assertion-fail-forced) (format (eql :default)) stream)
