@@ -2,19 +2,21 @@
 
 (defun assertion-expander (&key result test result-expression report-expression expected forms)
   "Expands an assertion macro call."
-  `(with-assert-restart
-     (let ((,result ,result-expression))
-       (if ,test
-           (signal-assertion :pass)
-           (signal-assertion :fail
-                             :returned   (if (and (listp ',expected)
-                                                  (eq (first ',expected)
-                                                      'values))
-                                             `(values ,@,result)
-                                             ,result)
-                             :expected   ',expected
-                             :expression ',report-expression
-                             :forms (list ,@(form-expander forms)))))))
+  (let ((multiple-values-results-p (gensym)))
+    `(with-assert-restart
+       (let ((,result ,result-expression)
+             (,multiple-values-results-p (and (listp ',expected)
+                                              (eq (first ',expected)
+                                                  'values))))
+         (if ,test
+             (signal-assertion :pass)
+             (signal-assertion :fail
+                               :returned   (if ,multiple-values-results-p
+                                               `(values ,@,result)
+                                               (first ,result))
+                               :expected   ',expected
+                               :expression ',report-expression
+                               :forms (list ,@(form-expander forms))))))))
 
 (defun form-expander (forms)
 "FORM-EXPANDER  manipulates  the  list  of forms  provided  to  an
@@ -91,14 +93,34 @@ example:
                         :forms             forms)))
 
 ;; Equality assertion macros.
+
+(defmacro gen-test-form (predicate values results)
+  (let ((res (gensym)))
+    `(progn
+       (assert (listp ,values))
+       (assert (listp ,results))
+       (assert (functionp ,predicate))
+       (and (= (length ,values)
+               (length ,results))
+            (let ((,res t))
+              (loop named inner
+                    for value  in ,values
+                    for result in ,results do
+                      (when (not (funcall ,predicate value result))
+                        (setf ,res nil)
+                        (return-from inner nil)))
+              ,res)))))
+
 (defmacro assert-eq (value expression &body forms)
   "Evaluates EXPRESSION  as an assertion,  an assertion passes  if (EQ
 VALUE EXPRESSION) values non nil. FORMS  and their values are printed if
 the test fails."
   (with-gensyms (result)
     (assertion-expander :result            result
-                        :test              `(eq ,value ,result)
-                        :result-expression expression
+                        :test              `(gen-test-form #'eq
+                                                           (multiple-value-list ,value)
+                                                           ,result)
+                        :result-expression `(multiple-value-list ,expression)
                         :report-expression `(eq ,value ,expression)
                         :expected          value
                         :forms             forms)))
@@ -109,8 +131,10 @@ VALUE EXPRESSION) values non nil. FORMS  and their values are printed if
 the test fails."
   (with-gensyms (result)
     (assertion-expander :result            result
-                        :test              `(eql ,value ,result)
-                        :result-expression expression
+                        :test              `(gen-test-form #'eql
+                                                           (multiple-value-list ,value)
+                                                           ,result)
+                        :result-expression `(multiple-value-list ,expression)
                         :report-expression `(eql ,value ,expression)
                         :expected          value
                         :forms             forms)))
@@ -132,8 +156,10 @@ example
 "
   (with-gensyms (result)
     (assertion-expander :result            result
-                        :test              `(equal ,value ,result)
-                        :result-expression expression
+                        :test              `(gen-test-form #'equal
+                                                           (multiple-value-list ,value)
+                                                           ,result)
+                        :result-expression `(multiple-value-list ,expression)
                         :report-expression `(equal ,value ,expression)
                         :expected          value
                         :forms             forms)))
@@ -144,8 +170,9 @@ if (EQUALP VALUE EXPRESSION) values non nil. FORMS and their values are
 printed if the test fails."
   (with-gensyms (result)
     (assertion-expander :result            result
-                        :test              `(equalp (multiple-value-list ,value)
-                                                    ,result)
+                        :test              `(gen-test-form #'equalp
+                                                           (multiple-value-list ,value)
+                                                           ,result)
                         :result-expression `(multiple-value-list ,expression)
                         :report-expression `(equalp ,value ,expression)
                         :expected          value
@@ -162,8 +189,10 @@ Example:
 "
   (with-gensyms (result)
     (assertion-expander :result            result
-                        :test              `(funcall ,test ,value ,result)
-                        :result-expression expression
+                        :test              `(gen-test-form ,test
+                                                           (multiple-value-list ,value)
+                                                           ,result)
+                        :result-expression `(multiple-value-list ,expression)
                         :report-expression `(funcall ,test ,value ,expression)
                         :expected          value
                         :forms             forms)))
@@ -181,8 +210,10 @@ Example:
 "
   (with-gensyms (result)
     (assertion-expander :result            result
-                        :test              `(funcall *clunit-equality-test* ,value ,result)
-                        :result-expression expression
+                        :test              `(gen-test-form ,*clunit-equality-test*
+                                                           (multiple-value-list ,value)
+                                                           ,result)
+                        :result-expression `(multiple-value-list ,expression)
                         :report-expression `(funcall *clunit-equality-test* ,value ,expression)
                         :expected          value
                         :forms             forms)))
