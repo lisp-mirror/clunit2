@@ -10,32 +10,32 @@
                 <link href="style.css" rel="stylesheet" type="text/css" />
             </head>
 
-            <body>                
+            <body>
                 <div id="asdf-page-title">
                     <h1>API Documentation: <xsl:value-of select="@name"/></h1>
-					<img src="lisplogo.png" style="left:2%;top:1.5%;position:absolute" width="90" length="90"/>
+
                 </div>
-				
+
 				<h3 style="color:green;">Author(s)</h3>
 				<div id="asdf-author">
 					<xsl:value-of select="@author"/>
 				</div>
-             
+
 				<h3 style="color:green;">Version</h3>
 				<div id="asdf-version">
 					<xsl:value-of select="@version"/>
 				</div>
-				
+
 				<h3 style="color:green;">Dependencies</h3>
 				<div id="asdf-version">
 					<xsl:value-of select="@depends-on"/>
 				</div>
-				
+
 				<h3 style="color:green;">Description</h3>
 				<div id="asdf-description">
 					<xsl:copy-of select="description/node()"/>
                 </div>
-				
+
 				<h3 style="color:green;">ASDF Naming Convention</h3>
                 <div id="asdf-naming-convention">
 					<p>
@@ -53,7 +53,7 @@
 						<b>xml.parser</b> sub-module and exports it from its own package as <b>xml:parse-xml-file</b>.
 					</p>
                 </div>
-				
+
 				<h3 style="color:green;">API Reference</h3>
                 <div id="asdf-toc">
 					<ol>
@@ -62,7 +62,7 @@
 						</xsl:apply-templates>
 					</ol>
                 </div>
-				
+
 				<h3 style="color:green;">Package API</h3>
                 <div id="asdf-content">
                     <xsl:apply-templates select="symbols/symbol" mode="fulltext">
@@ -73,48 +73,48 @@
             </body>
         </html>
     </xsl:template>
-	
+
 	<xsl:template match="symbol" mode="toc">
 		<li>
 			<a>
 				<xsl:attribute name="href">#<xsl:value-of select="@name"/></xsl:attribute>
-				<xsl:value-of select="@name"/>	
+				<xsl:value-of select="@name"/>
 			</a>
-		</li>		
+		</li>
 	</xsl:template>
-	
+
 	<xsl:template match="symbol" mode="fulltext">
         <div class='symbol-syntax' >
-		
+
 			<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
 			<!-- Add an id attribute used by the Table of Contents to link to the function description. -->
-			
+
 			[<xsl:value-of select="@type"/>]<br/>
-			<b><xsl:value-of select="@name"/></b> 
+			<b><xsl:value-of select="@name"/></b>
 			<i>
 				<xsl:if test="argument[@arg-type='whole']">
 					&amp;whole <xsl:apply-templates select="argument[@arg-type='whole']"/>
 				</xsl:if>
-				
+
 				<xsl:apply-templates select="argument[@arg-type='required']"/>
-				
+
 				<xsl:if test="argument[@arg-type='optional']">
 					&amp;optional <xsl:apply-templates select="argument[@arg-type='optional']"/>
 				</xsl:if>
-				
+
 				<xsl:if test="argument[@arg-type='key']">
 					&amp;key <xsl:apply-templates select="argument[@arg-type='key']"/>
 				</xsl:if>
-				
+
 				<xsl:if test="argument[@arg-type='rest']">
 					&amp;rest <xsl:apply-templates select="argument[@arg-type='rest']"/>
 				</xsl:if>
-				
+
 				<xsl:if test="argument[@arg-type='body']">
 					&amp;body <xsl:apply-templates select="argument[@arg-type='body']"/>
 				</xsl:if>
 			</i>
-			
+
 			<!-- Test if the symbol has a return type (this only applies for functions and macros). If it does list the return type. -->
 			<xsl:if test="return-type">
 			=>
@@ -124,7 +124,7 @@
 					</xsl:for-each>
 				</i>
 			</xsl:if>
-			
+
 			<!-- If the symbol takes any arguments (this only applies for functions and macros). If it does add two newlines before listing the arguments -->
 			<xsl:if test="argument">
 				<br/><br/>
@@ -140,7 +140,7 @@
 		</div>
 		<br/><br/>
     </xsl:template>
-	
+
 	<xsl:template match="argument">
        &#160;<xsl:value-of select="@name"/>
     </xsl:template>

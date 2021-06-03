@@ -6,6 +6,17 @@ Maintainer(s):	cage
 
 	DD/MM/YY
 
+	03/06/2021
+
+	[cage]
+
+	- Equality assertion can test multiple-values as, for example:
+
+	(assert-equal (values 1 2) (values 1 3)); => fails
+
+	-  printed failed  test results  using "~s",  not "~a",  in format
+	control string, when using default report style.
+
 	18/08/2020
 
 	[cage]
