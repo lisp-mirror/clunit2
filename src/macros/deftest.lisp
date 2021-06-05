@@ -82,11 +82,11 @@ The DEFTEST macro has three possible forms:
                             (setf body-forms (expand-fixture suite body-forms)))
                           body-forms))))))
          ;; Create new test case instance and add it to lookup table.
-         (setf (get-test-case ',name)
-               (make-instance 'clunit-test-case
-                              :name          ',name
-                              :dependencies  ,test-dependencies
-                              :test-function ,test-function))))))
+         (add-test-case ',name
+                        (make-instance 'clunit-test-case
+                                       :name          ',name
+                                       :dependencies  ,test-dependencies
+                                       :test-function ,test-function))))))
 
 ;; UNDEFTEST Algorithm:
 ;; 1. Check if test case is defined, if its not throw an error.

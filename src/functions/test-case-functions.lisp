@@ -66,7 +66,7 @@ printed on the standard output."
 the hash table *TEST-CASES*"
   (gethash name *test-case-hashtable*))
 
-(defun (setf get-test-case) (new-test-case name)
+(defun add-test-case (name new-test-case)
   "Adds NEW-TEST-CASE  in the  hash table  *TEST-CASES* under  the key
 NAME."
   (setf (gethash name *test-case-hashtable*) new-test-case))
