@@ -80,11 +80,11 @@ printed on the standard output."
 
 (defun get-test-suite (name)
   "Retrieves the TEST-SUITE  instance associated with the  key NAME in
-the hash table *TEST-SUITES*"
+the hash table *test-suite-hashtable*"
   (gethash name *test-suite-hashtable*))
 
 (defun (setf get-test-suite) (new-test-suite name)
-  "Adds NEW-TEST-SUITE in  the hash table *TEST-SUITES*  under the key
+  "Adds NEW-TEST-SUITE in  the hash table *test-suite-hashtable*  under the key
 NAME."
   (setf (gethash name *test-suite-hashtable*) new-test-suite))
 
@@ -95,7 +95,7 @@ otherwise returns NIL."
 
 (defun delete-test-suite (name)
   "Deletes the TEST-SUITE instance associated with the key NAME in the
-hash table *TEST-SUITES*"
+hash table *test-suite-hashtable*"
   (remhash name *test-suite-hashtable*))
 
 (defun get-child-tests (suite-name)
