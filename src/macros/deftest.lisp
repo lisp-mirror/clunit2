@@ -1,5 +1,43 @@
 (in-package :clunit)
 
+(defun deftest-check-all-symbols (list error-control-message)
+  "Ensures `list' is a list of symbols.
+
+In deftest  `declarations' can be  a list of suites  or a list  of two
+elements, the first a  list of suites and the second  a list of tests,
+each memebre of said list must be a symbol.
+"
+  (loop for i in list do
+    (when (not (symbolp i))
+      (error error-control-message list i))))
+
+(defun deftest-declaration-dependencies (declarations)
+  "When  `declarations' comes  from  the `deftest'  macro returns  the
+dependencies (suites and optionally tests)"
+  (unless (listp declarations)
+    (error "In (deftest name declarations . body), DECLARATION should be a list not ~S."
+           declarations))
+  (let* ((maybe-list-suites       (first declarations))
+         (maybe-list-tests        (second declarations))
+         (separated-list-suites-p (and maybe-list-suites
+                                       (listp maybe-list-suites)))
+         (suites                  (if separated-list-suites-p
+                                      maybe-list-suites
+                                      declarations))
+         (tests                   (if separated-list-suites-p
+                                      maybe-list-tests
+                                      nil)))
+    (deftest-check-all-symbols suites
+      "Every member of parent suites should be a symbol but ~s contains ~s which is not a symbol.")
+    (deftest-check-all-symbols tests
+      "Every member of test dependency should be a symbol but ~s contains ~s which is not a symbol.")
+    (values suites tests)))
+
+(defun deftest-ensure-dependency-exists (test-name list predicate control-message)
+  (loop for i in list do
+    (when (not (funcall predicate i))
+      (warn control-message test-name i))))
+
 ;; The DEFTEST macro has three possible forms:
 ;;
 ;;      1. Define a test case not associated with any test suite and with no dependencies.
@@ -22,6 +60,7 @@
 ;; 5. Create a named lambda test function.
 ;; 6. Create new test suite instance and add it to lookup table.
 ;;
+
 (defmacro deftest (name declarations &body body)
   "Defines a  test case called  NAME. DECLARATIONS declares  which test
 suites this  test case is  associated with as  well as any  other test
@@ -44,56 +83,48 @@ The DEFTEST macro has three possible forms:
   depends on tests: test1 ... testN
 
    (deftest name ((suite1 suite2 ... suiteN) (test1 test2 ... testN)) . body)"
-(with-gensyms (parent-suites test-dependencies test-function)
-    `(let ((,parent-suites ',declarations) ,test-dependencies ,test-function)
-       (unless (listp ,parent-suites)
-         (error "In (deftest name declarations . body), DECLARATION should be a list not ~S."
-                ,parent-suites))
-       ;; Check if declaration is of the form ((suite1 ... suiteN) (test1 ... testN))
-       (when (listp (first ,parent-suites))
-         ;; Set   PARENT-SUITES   and   TEST-DEPENDENCIES   to   their
-         ;; respective  values  in  the ((suite1  ...  suiteN)  (test1
-         ;; ... testN)) declaration form.
-         (setf ,test-dependencies (second ,parent-suites))
-         (setf ,parent-suites (first ,parent-suites)))
-       (unless (every #'symbolp ,parent-suites)
-         (error "In ~S, every name should be a symbol." ,parent-suites))
-       (unless (every #'symbolp ,test-dependencies)
-         (error "In ~S, every name should be a symbol." ,test-dependencies))
-       ;; Emit warnings for all dependencies on test cases that have not yet been defined.
-       (loop for test in ,test-dependencies do
-            (unless (get-test-case test)
-              (warn "Defining test case ~S which has a dependency on undefined test case ~S."
-                    ',name test)))
-       ;; Make sure that all the parents are test suites.
-       (loop for parent in ,parent-suites do
-            (unless (get-test-suite parent)
-              (error "Trying to add test case ~S reference to test suite, but test suite ~S is not defined."
-                     ',name parent)))
-       ;; Add test case reference to each of its parent's TEST-CASES slot.
-       (loop for parent in ,parent-suites do
-            (pushnew ',name (test-cases (get-test-suite parent))))
-       (setf ,test-function
-             (lambda ()
-               (block ,name
-                 (with-test-restart
-                   (let ((*test-name* ',name) (body '(progn ,@body)))
-                     (when *suite-name*
+  (with-gensyms (parent-suites test-dependencies test-function)
+    (multiple-value-bind (dependencies-suites dependencies-tests)
+        (deftest-declaration-dependencies declarations)
+      ;; Emit warnings for all dependencies on test cases that have not yet been defined.
+      (deftest-ensure-dependency-exists name
+           dependencies-tests
+        #'get-test-case
+        "Defining test case ~S which has a dependency on undefined test case ~S.")
+      (deftest-ensure-dependency-exists name
+        dependencies-suites
+        #'get-test-suite
+        "Trying to add test case ~S reference to test suite, but test suite ~S is not defined.")
+
+      `(let ((,parent-suites     ',dependencies-suites)
+             (,test-dependencies ',dependencies-tests)
+             (,test-function     nil))
+         ;; Add test case reference to each of its parent's TEST-CASES slot.
+         (loop for parent in ,parent-suites do
+           (pushnew ',name (test-cases (get-test-suite parent))))
+         (setf ,test-function
+               (lambda ()
+                 (block ,name
+                   (with-test-restart
+                     (let ((*test-name* ',name))
                        ;; If test  was not  called by any  test suite,
                        ;; then  do  not  attempt  to  expand  out  any
                        ;; fixtures.
-                       (dolist (suite (reverse *suite-name*) body)
-                         ;; However, if the test  is being executed in
-                         ;; a context with one or more test suites,
-                         (setf body (expand-fixture suite body))))
-                     ;; expand out the fixtures starting with the most
-                     ;; specific
-                     (eval body))))))
-       ;; Create new test case instance and add it to lookup table.
-       (setf (get-test-case ',name) (make-instance 'clunit-test-case
-                                                   :name          ',name
-                                                   :dependencies  ,test-dependencies
-                                                   :test-function ,test-function)))))
+                       ;; However, if the test  is being executed in
+                       ;; a context with one or more test suites,
+                       ;; expand out the fixtures starting with the most
+                       ;; specific
+                       ,(let ((body-forms `(progn ,@body)))
+                          (dolist (suite (reverse dependencies-suites))
+
+                            (setf body-forms (expand-fixture suite body-forms)))
+                          body-forms))))))
+         ;; Create new test case instance and add it to lookup table.
+         (setf (get-test-case ',name)
+               (make-instance 'clunit-test-case
+                              :name          ',name
+                              :dependencies  ,test-dependencies
+                              :test-function ,test-function))))))
 
 ;; UNDEFTEST Algorithm:
 ;; 1. Check if test case is defined, if its not throw an error.
