@@ -5,15 +5,19 @@
   (let ((multiple-values-results-p (gensym)))
     `(with-assert-restart
        (let ((,result ,result-expression)
-             (,multiple-values-results-p (and (listp ',expected)
-                                              (eq (first ',expected)
+             (,multiple-values-results-p ,(and (listp expected)
+                                              (eq (first expected)
                                                   'values))))
          (if ,test
              (signal-assertion :pass)
              (signal-assertion :fail
-                               :returned   (if ,multiple-values-results-p
-                                               `(values ,@,result)
-                                               (first ,result))
+                               :returned   (cond
+                                             (,multiple-values-results-p
+                                              `(values ,@,result))
+                                             ((listp ,result)
+                                              (first ,result))
+                                             (t
+                                              ,result))
                                :expected   ',expected
                                :expression ',report-expression
                                :forms (list ,@(form-expander forms))))))))

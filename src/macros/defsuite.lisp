@@ -16,24 +16,23 @@ Example:
 (defsuite arithmetic ())
 
 (defsuite arithmetic-+ (arithmetic))"
-  (with-gensyms (parent-list)
-    `(let ((,parent-list ',parents))
-       (unless (symbolp ',name)
-         (error "In (defsuite name parents . body), NAME should be a symbol not ~S." ',name))
-       (unless (listp ,parent-list)
-         (error "In (defsuite name parents . body), PARENTS should be a list not ~S." ,parent-list))
-       (unless (every #'symbolp ,parent-list)
-         (error "In ~S, every name should be a symbol." ,parent-list))
-       ;; Make sure that all the parents are test suites.
-       (loop for parent in ,parent-list do
-            (unless (get-test-suite parent)
-              (error "Trying to define test suite ~S, but one of its parents ~S is not a test suite." ',name parent)))
-       ;; Test for circularity in test hierarchy.
-       ;; Add test suite reference to each of its parent's CHILD-SUITES slot.
-       (loop for parent in ,parent-list do
-            (pushnew ',name (child-suites (get-test-suite parent))))
-       ;; Create new test suite instance and add it to lookup table.
-       (setf (get-test-suite ',name) (make-instance 'clunit-test-suite :name ',name)))))
+  (let ((parent-list parents))
+    (unless (symbolp name)
+      (error "In (defsuite name parents . body), NAME should be a symbol not ~S." name))
+    (unless (listp parent-list)
+      (error "In (defsuite name parents . body), PARENTS should be a list not ~S." parent-list))
+    (unless (every #'symbolp parent-list)
+      (error "In ~S, every name should be a symbol." parent-list))
+    ;; Make sure that all the parents are test suites.
+    (loop for parent in parent-list do
+      (unless (get-test-suite parent)
+        (error "Trying to define test suite ~S, but one of its parents ~S is not a test suite." name parent)))
+    ;; Test for circularity in test hierarchy.
+    ;; Add test suite reference to each of its parent's CHILD-SUITES slot.
+    (loop for parent in parent-list do
+      (pushnew name (child-suites (get-test-suite parent))))
+    ;; Create new test suite instance and add it to lookup table.
+    (setf (get-test-suite name) (make-instance 'clunit-test-suite :name name))))
 
 ;; UNDEFSUITE Algorithm:
 ;; 1. Check if test suite is defined, if its not throw an error.
