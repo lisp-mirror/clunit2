@@ -1,43 +1,5 @@
 (in-package :clunit)
 
-(defun deftest-check-all-symbols (list error-control-message)
-  "Ensures `list' is a list of symbols.
-
-In deftest  `declarations' can be  a list of suites  or a list  of two
-elements, the first a  list of suites and the second  a list of tests,
-each memebre of said list must be a symbol.
-"
-  (loop for i in list do
-    (when (not (symbolp i))
-      (error error-control-message list i))))
-
-(defun deftest-declaration-dependencies (declarations)
-  "When  `declarations' comes  from  the `deftest'  macro returns  the
-dependencies (suites and optionally tests)"
-  (unless (listp declarations)
-    (error "In (deftest name declarations . body), DECLARATION should be a list not ~S."
-           declarations))
-  (let* ((maybe-list-suites       (first declarations))
-         (maybe-list-tests        (second declarations))
-         (separated-list-suites-p (and maybe-list-suites
-                                       (listp maybe-list-suites)))
-         (suites                  (if separated-list-suites-p
-                                      maybe-list-suites
-                                      declarations))
-         (tests                   (if separated-list-suites-p
-                                      maybe-list-tests
-                                      nil)))
-    (deftest-check-all-symbols suites
-      "Every member of parent suites should be a symbol but ~s contains ~s which is not a symbol.")
-    (deftest-check-all-symbols tests
-      "Every member of test dependency should be a symbol but ~s contains ~s which is not a symbol.")
-    (values suites tests)))
-
-(defun deftest-ensure-dependency-exists (test-name list predicate control-message)
-  (loop for i in list do
-    (when (not (funcall predicate i))
-      (warn control-message test-name i))))
-
 ;; The DEFTEST macro has three possible forms:
 ;;
 ;;      1. Define a test case not associated with any test suite and with no dependencies.
@@ -87,14 +49,14 @@ The DEFTEST macro has three possible forms:
     (multiple-value-bind (dependencies-suites dependencies-tests)
         (deftest-declaration-dependencies declarations)
       ;; Emit warnings for all dependencies on test cases that have not yet been defined.
-      (deftest-ensure-dependency-exists name
-           dependencies-tests
-        #'get-test-case
-        "Defining test case ~S which has a dependency on undefined test case ~S.")
-      (deftest-ensure-dependency-exists name
-        dependencies-suites
-        #'get-test-suite
-        "Trying to add test case ~S reference to test suite, but test suite ~S is not defined.")
+      (ensure-dependency-exists name
+                                dependencies-tests
+                                #'get-test-case
+                                "Defining test case ~S which has a dependency on undefined test case ~S.")
+      (ensure-dependency-exists name
+                                dependencies-suites
+                                #'get-test-suite
+                                "Trying to add test case ~S reference to test suite, but test suite ~S is not defined.")
 
       `(let ((,parent-suites     ',dependencies-suites)
              (,test-dependencies ',dependencies-tests)

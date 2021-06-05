@@ -36,7 +36,8 @@ testing experience:
                                     (:file "clunit-test-report")))
                           (:module "functions"
                                    :components
-                                   ((:file "prepare-specials")
+                                   ((:file "utilities")
+                                    (:file "prepare-specials")
                                     (:file "assertion-functions")
                                     (:file "generic-functions")
                                     (:file "test-case-functions")
