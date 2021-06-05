@@ -97,8 +97,7 @@ The DEFTEST macro has three possible forms:
         "Trying to add test case ~S reference to test suite, but test suite ~S is not defined.")
 
       `(let ((,parent-suites     ',dependencies-suites)
-             (,test-dependencies ,(and dependencies-tests
-                                      'dependencies-tests))
+             (,test-dependencies ',dependencies-tests)
              (,test-function     nil))
          ;; Add test case reference to each of its parent's TEST-CASES slot.
          (loop for parent in ,parent-suites do
