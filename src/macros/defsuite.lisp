@@ -31,10 +31,11 @@ Example:
                               "Trying to define test suite ~S, but one of its parents ~S is not a test suite.")
     ;; Test for circularity in test hierarchy.
     ;; Add test suite reference to each of its parent's CHILD-SUITES slot.
-    (loop for parent in parent-list do
-      (pushnew name (child-suites (get-test-suite parent))))
-    ;; Create new test suite instance and add it to lookup table.
-    (setf (get-test-suite name) (make-instance 'clunit-test-suite :name name))))
+    `(eval-when  (:execute :load-toplevel :compile-toplevel)
+       (loop for parent in ',parent-list do
+         (pushnew ',name (child-suites (get-test-suite parent))))
+       ;; Create new test suite instance and add it to lookup table.
+       (setf (get-test-suite ',name) (make-instance 'clunit-test-suite :name ',name)))))
 
 ;; UNDEFSUITE Algorithm:
 ;; 1. Check if test suite is defined, if its not throw an error.

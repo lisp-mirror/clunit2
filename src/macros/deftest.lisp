@@ -58,35 +58,35 @@ The DEFTEST macro has three possible forms:
                                 #'get-test-suite
                                 "Trying to add test case ~S reference to test suite, but test suite ~S is not defined.")
 
-      `(let ((,parent-suites     ',dependencies-suites)
-             (,test-dependencies ',dependencies-tests)
-             (,test-function     nil))
-         ;; Add test case reference to each of its parent's TEST-CASES slot.
-         (loop for parent in ,parent-suites do
-           (pushnew ',name (test-cases (get-test-suite parent))))
-         (setf ,test-function
-               (lambda ()
-                 (block ,name
-                   (with-test-restart
-                     (let ((*test-name* ',name))
-                       ;; If test  was not  called by any  test suite,
-                       ;; then  do  not  attempt  to  expand  out  any
-                       ;; fixtures.
-                       ;; However, if the test  is being executed in
-                       ;; a context with one or more test suites,
-                       ;; expand out the fixtures starting with the most
-                       ;; specific
-                       ,(let ((body-forms `(progn ,@body)))
-                          (dolist (suite (reverse dependencies-suites))
-
-                            (setf body-forms (expand-fixture suite body-forms)))
-                          body-forms))))))
-         ;; Create new test case instance and add it to lookup table.
-         (add-test-case ',name
-                        (make-instance 'clunit-test-case
-                                       :name          ',name
-                                       :dependencies  ,test-dependencies
-                                       :test-function ,test-function))))))
+      `(eval-when  (:execute :load-toplevel :compile-toplevel)
+         (let ((,parent-suites     ',dependencies-suites)
+               (,test-dependencies ',dependencies-tests)
+               (,test-function     nil))
+           ;; Add test case reference to each of its parent's TEST-CASES slot.
+           (loop for parent in ,parent-suites do
+             (pushnew ',name (test-cases (get-test-suite parent))))
+           (setf ,test-function
+                 (lambda ()
+                   (block ,name
+                     (with-test-restart
+                         (let ((*test-name* ',name))
+                           ;; If test  was not  called by any  test suite,
+                           ;; then  do  not  attempt  to  expand  out  any
+                           ;; fixtures.
+                           ;; However, if the test  is being executed in
+                           ;; a context with one or more test suites,
+                           ;; expand out the fixtures starting with the most
+                           ;; specific
+                           ,(let ((body-forms `(progn ,@body)))
+                              (dolist (suite (reverse dependencies-suites))
+                                (setf body-forms (expand-fixture suite body-forms)))
+                              body-forms))))))
+           ;; Create new test case instance and add it to lookup table.
+           (add-test-case ',name
+                          (make-instance 'clunit-test-case
+                                         :name          ',name
+                                         :dependencies  ,test-dependencies
+                                         :test-function ,test-function)))))))
 
 ;; UNDEFTEST Algorithm:
 ;; 1. Check if test case is defined, if its not throw an error.
