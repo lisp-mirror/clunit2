@@ -15,7 +15,9 @@
                                              (,multiple-values-results-p
                                               `(values ,@,result))
                                              ((listp ,result)
-                                              (first ,result))
+                                              (if (> (length ,result) 1)
+                                                  `(values ,@,result)
+                                                  (first ,result)))
                                              (t
                                               ,result))
                                :expected   ',expected

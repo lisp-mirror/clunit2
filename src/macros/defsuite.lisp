@@ -7,7 +7,6 @@
 ;; 4. Create new test suite instance and add it to lookup table.
 ;;
 
-
 (defmacro defsuite (name parents)
   "Defines a  test suite called NAME.  If PARENTS is non-NIL  the test
 suite  is  defined as  a  sub-suite  of each  of  the  test suites  in
