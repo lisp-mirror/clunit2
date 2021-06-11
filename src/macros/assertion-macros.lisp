@@ -259,9 +259,16 @@ Example:
            (signal-assertion :fail
                              :expression ',expression
                              :expected   ',condition
+                             :returned   ,expression
                              :forms      (list ,@(form-expander forms))))
        (,condition ()
-         (signal-assertion :pass)))))
+         (signal-assertion :pass))
+       (error (e)
+         (signal-assertion :fail
+                           :expression ',expression
+                           :expected   ',condition
+                           :returned   e
+                           :forms      (list ,@(form-expander forms)))))))
 
 ;; Force assertion failure.
 (defun assert-fail (format-string &rest args)
