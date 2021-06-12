@@ -16,7 +16,7 @@
 ;; The pretty printing in CLISP is really broken so we just try has hard as can to compensate.
 (defmethod print-format ((report clunit-test-report) (format (eql :TAP)) stream)
   (with-slots (test-name assertion-conditions suite-list) report
-    (dolist (condition assertion-conditions)
+    (loop for condition across assertion-conditions do
       (typecase condition
         (assertion-passed
          #-clisp (format stream "~0I~:@_ok ~A" (incf *tap-test-num*))

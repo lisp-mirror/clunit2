@@ -1,5 +1,7 @@
 (in-package :clunit)
 
+(defconstant +assertion-conditions-reserved-size+ 100)
+
 (defclass clunit-test-report ()
   ((test-name
     :initform nil
@@ -25,7 +27,7 @@
     :accessor suite-list
     :documentation "A list of the suites this test belong.")
    (assertion-conditions
-    :initform ()
+    :initform (make-array +assertion-conditions-reserved-size+ :adjustable t :fill-pointer 0)
     :accessor assertion-conditions
     :documentation "the clunit-test-report instance  is used to store
      the report information for each executed test case.")))

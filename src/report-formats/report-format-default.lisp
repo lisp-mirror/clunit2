@@ -47,11 +47,12 @@
 
 (defmethod print-format ((report clunit-test-report) (format (eql :default)) stream)
   (with-slots (test-name assertion-conditions) report
-    (dolist (condition assertion-conditions)
-      (unless (typep condition 'assertion-passed)
-        (format stream "~:@_~A: " test-name)
-        (print-format condition format stream)
-        (format stream "~:@_")))))
+    (loop for condition across assertion-conditions
+          when (not (typep condition 'assertion-passed))
+            do
+               (format stream "~:@_~A: " test-name)
+               (print-format condition format stream)
+               (format stream "~:@_"))))
 
 (defmethod print-format ((condition assertion-error) (format (eql :default)) stream)
   (pprint-logical-block (stream nil)

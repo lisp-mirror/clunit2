@@ -21,8 +21,8 @@ printed on the standard output."
     (let ((test-case (get-test-case test)))
       (unless test-case
         (error "Test case ~S is not defined." test))
-      (handler-bind ((error #'handle-error)
-                     (warning #'muffle-warning)
+      (handler-bind ((error               #'handle-error)
+                     (warning             #'muffle-warning)
                      (assertion-condition #'handle-assertion))
         (restart-case
             (progn

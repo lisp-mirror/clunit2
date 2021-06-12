@@ -21,10 +21,13 @@
 
 (defun handle-assertion (condition)
   "Records the result of assertion tests and records any errors that occur."
-  (let ((restart (or (find-restart 'skip-assertion) (find-restart 'skip-test))))
+  (let ((restart (or (find-restart 'skip-assertion)
+                     (find-restart 'skip-test))))
     (with-slots (passed failed errors) *clunit-report*
       (with-slots (passed-p assertion-conditions) *clunit-test-report*
-        (setf assertion-conditions (nconc assertion-conditions (list condition)))
+        (vector-push-extend condition
+                            assertion-conditions
+                            +assertion-conditions-reserved-size+)
         (typecase condition
           (assertion-error
            (when passed-p
