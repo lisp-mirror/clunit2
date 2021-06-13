@@ -1,5 +1,3 @@
-* Important note: This branch is experimental
-
 * CLUnit
 
 * Overview
@@ -28,7 +26,7 @@ testing experience:
 
 Check out the comprehensive
 [[http://tgutu.github.io/clunit][CLUnit Tutorial]]
-[[https://web.archive.org/web/20200929000204/https://tgutu.github.io/clunit/][archived URL]].
+([[https://web.archive.org/web/20200929000204/https://tgutu.github.io/clunit/][archived URL]]).
 
 * Example
 

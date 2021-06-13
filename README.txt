@@ -4,24 +4,19 @@ cage
 Table of Contents
 ─────────────────
 
-1. Important note: This branch is experimental
-2. CLUnit
-3. Overview
-4. Example
-5. Tests and assertions
-6. BUGS
-7. Notes
+1. CLUnit
+2. Overview
+3. Example
+4. Tests and assertions
+5. BUGS
+6. Notes
 
 
-1 Important note: This branch is experimental
-═════════════════════════════════════════════
-
-
-2 CLUnit
+1 CLUnit
 ════════
 
 
-3 Overview
+2 Overview
 ══════════
 
   CLUnit is a Common Lisp unit testing framework. It is designed to be
@@ -46,7 +41,7 @@ Table of Contents
     ["Test Anything Protocol" (TAP)] output.
   ⁃ Released under MIT license
 
-  Check out the comprehensive [CLUnit Tutorial] [archived URL].
+  Check out the comprehensive [CLUnit Tutorial] ([archived URL]).
 
 
 ["Test Anything Protocol" (TAP)]
@@ -58,7 +53,7 @@ Table of Contents
 <https://web.archive.org/web/20200929000204/https://tgutu.github.io/clunit/>
 
 
-4 Example
+3 Example
 ═════════
 
   ┌────
@@ -132,7 +127,7 @@ Table of Contents
   └────
 
 
-5 Tests and assertions
+4 Tests and assertions
 ══════════════════════
 
   Each test, like `test-int1' in the above example, can contain a number
@@ -191,7 +186,7 @@ Table of Contents
   └────
 
 
-6 BUGS
+5 BUGS
 ══════
 
   Please file bug report on the [issue tracker]
@@ -200,7 +195,7 @@ Table of Contents
 [issue tracker] <https://notabug.org/cage/clunit2/issues>
 
 
-7 Notes
+6 Notes
 ═══════
 
   This is a fork of <https://github.com/tgutu/clunit> .
