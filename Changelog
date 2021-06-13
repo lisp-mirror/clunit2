@@ -92,11 +92,11 @@
 	[cage]
 
 	- Cleaned sources;
-	- improved tests progress output appereance in CCL and ABCL;
+	- improved tests progress output appearance in CCL and ABCL;
 	- added the variable *test-output-stream*; the value must be an output
 	  stream (default *standard-output*) where  all the tests results will
           be printed.
-	- removing percetages for cumulative tests results
+	- removing percentages for cumulative tests results
 	  Rounding of  percentage can give,  for example, 100%  of passed
 	  tests  when actually  a  few failed  or resulted  in  one or  more
 	  errors;
@@ -107,7 +107,7 @@
 	[jgodbout]
 
 	- Fix documentation xml  file, adding conditions and documentation
-	for run-suite-conditiion signal
+	for run-suite-condition signal
         - Tabbify changelog
 	- Switch the output of test suite information with signal
 
