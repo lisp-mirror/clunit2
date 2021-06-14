@@ -17,6 +17,24 @@
         <li>Extensible test reporting. Builtin support for default reporting and TAP output.</li>
       </ul>
     </p>
+
+    <p>
+      Nota bene: Because of some internal machinery of the library the following code:
+      <code>
+        (assert-true (eq a b))
+      </code>
+      Is faster than:
+      <code>
+        (assert-eq a b)
+      </code>
+      This happens,  likely, because the second  assertion will always
+      assumes that  b will  return multiple  values and  rearrange the
+      test to something like that:
+      <code>
+        (every #'eq (multiple-value-list a) (multiple-value-list b))
+      </code>
+    </p>
+
   </description>
 
   <symbols>
