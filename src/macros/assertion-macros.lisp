@@ -216,7 +216,7 @@ Example:
 "
   (with-gensyms (result)
     (assertion-expander :result            result
-                        :test              `(gen-test-form ,*clunit-equality-test*
+                        :test              `(gen-test-form *clunit-equality-test*
                                                            (multiple-value-list ,value)
                                                            ,result)
                         :result-expression `(multiple-value-list ,expression)
