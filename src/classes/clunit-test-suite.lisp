@@ -19,3 +19,27 @@
  When we execute a test suite and  try to resolve the reference for an
  object.  if  the object is not  found, it means the  reference is now
  stale so the name of that test case or suite is removed."))
+
+(defun collect-suite-dependencies (start &key (symbol-suite-only nil))
+  (let ((dependencies ()))
+    (labels ((suite-value (a)
+               (cdr a))
+             (suite-key (a)
+               (car a))
+             (find-parent-fn (child)
+               (lambda (a) (find child (child-suites (suite-value a)))))
+             (collect-parents (bag child)
+               (remove-if-not (find-parent-fn child) bag))
+             (collect-path (bag child)
+               (let ((parents (collect-parents bag child)))
+                 (when parents
+                   (loop for parent in parents do
+                     (collect-path bag (suite-key parent))
+                     (pushnew parent dependencies
+                              :test (lambda (a b) (eq (suite-key a)
+                                                      (suite-key b)))))))))
+      (let ((suites (reverse *test-suite-alist*)))
+        (collect-path suites start)
+        (if symbol-suite-only
+            (mapcar #'suite-key (reverse dependencies))
+            (reverse dependencies))))))

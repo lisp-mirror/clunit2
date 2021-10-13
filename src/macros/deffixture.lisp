@@ -46,8 +46,7 @@ of each test case and test  suite that are executed by test suite
 SUITE  at  runtime.. The  test  case  body  is plugged  into  the
 template at the position identified by PLUG.
 
-Fixtures are expanded  at runtime, so the fixture  that will wrap
-around a test depends on the test suite call stack.
+Fixtures are expanded  at compile time.
 
 Example:
 
@@ -55,12 +54,13 @@ Example:
   (let ((x 0) (y 1) (z 2))
     @body))
 "
-  `(handler-bind ((warning #'muffle-warning))
-     ;; Test that fixture is being defined for a SUITE subclass.
-     (unless (get-test-suite ',suite)
-       (error "~A is not a test suite." ',suite))
-     (defmethod expand-fixture ((suite (eql ',suite)) body)
-       (subst body ',plug '(progn ,@body)))))
+  `(eval-when  (:execute :load-toplevel :compile-toplevel)
+     (handler-bind ((warning #'muffle-warning))
+       ;; Test that fixture is being defined for a SUITE subclass.
+       (unless (get-test-suite ',suite)
+         (error "~A is not a test suite." ',suite))
+       (defmethod expand-fixture ((suite (eql ',suite)) body)
+         (subst body ',plug '(progn ,@body))))))
 
 (defmacro undeffixture (name)
   "Remove a fixture definition."

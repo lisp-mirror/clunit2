@@ -1,5 +1,13 @@
 (in-package :clunit)
 
+(defun collect-all-suite-dependencies (direct-dependency-list)
+  (let ((results ()))
+    (loop for suite in direct-dependency-list do
+      (let ((dependencies (collect-suite-dependencies suite :symbol-suite-only t)))
+        (loop for dependency in dependencies do
+          (pushnew dependency results))))
+    (append direct-dependency-list results)))
+
 ;; The DEFTEST macro has three possible forms:
 ;;
 ;;      1. Define a test case not associated with any test suite and with no dependencies.
@@ -75,10 +83,10 @@ The DEFTEST macro has three possible forms:
                            ;; fixtures.
                            ;; However, if the test  is being executed in
                            ;; a context with one or more test suites,
-                           ;; expand out the fixtures starting with the most
-                           ;; specific
-                           ,(let ((body-forms `(progn ,@body)))
-                              (dolist (suite (reverse dependencies-suites))
+                           ;; expand out the fixtures in topological order
+                           ,(let ((body-forms              `(progn ,@body))
+                                  (all-dependencies-suites (collect-all-suite-dependencies dependencies-suites)))
+                              (dolist (suite all-dependencies-suites)
                                 (setf body-forms (expand-fixture suite body-forms)))
                               body-forms))))))
            ;; Create new test case instance and add it to lookup table.

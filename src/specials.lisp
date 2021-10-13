@@ -4,6 +4,10 @@
   "Holds  CLUNIT-TEST-SUITE  instances. The  key  of  each test  suite
   object is the symbol name.")
 
+(defvar *test-suite-alist*      ()
+  "Holds  CLUNIT-TEST-SUITE  instances. The  car  of  each test  suite
+  object is the symbol name.")
+
 (defvar *test-case-hashtable*   (make-hash-table :test #'eq)
   "Holds CLUNIT-TEST-CASE instances. The key  of each test case object
   is the symbol name.")

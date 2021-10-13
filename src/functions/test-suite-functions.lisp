@@ -84,8 +84,10 @@ the hash table *test-suite-hashtable*"
   (gethash name *test-suite-hashtable*))
 
 (defun (setf get-test-suite) (new-test-suite name)
-  "Adds NEW-TEST-SUITE in  the hash table *test-suite-hashtable*  under the key
-NAME."
+  "Adds NEW-TEST-SUITE  in the  hash table  *test-suite-hashtable* and
+*test-suite-alist* under the key NAME."
+  (when (not (assoc name *test-suite-alist*))
+    (setf *test-suite-alist* (acons name new-test-suite *test-suite-alist*)))
   (setf (gethash name *test-suite-hashtable*) new-test-suite))
 
 (defun defined-suite-p (suite-name)
