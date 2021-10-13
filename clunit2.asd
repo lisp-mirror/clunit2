@@ -1,7 +1,7 @@
 (in-package :cl-user)
 
 (asdf:defsystem :clunit2
-  :version     "0.5.1"
+  :version     "0.5.2"
   :author      "Tapiwa Gutu"
   :maintainer  "cage"
   :bug-tracker "https://notabug.org/cage/clunit2/issues"

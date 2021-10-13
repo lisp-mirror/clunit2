@@ -1,3 +1,13 @@
+2021-10-13 cage
+
+        * src/classes/clunit-test-suite.lisp,
+        * src/functions/test-suite-functions.lisp,
+        * src/macros/deffixture.lisp,
+        * src/macros/deftest.lisp,
+        * src/specials.lisp:
+
+        - fixed macro 'deffixture'.
+
 2021-08-21  cage
 
         * src/macros/assertion-macros.lisp:
