@@ -5,7 +5,7 @@
   :author      "Tapiwa Gutu"
   :maintainer  "cage"
   :bug-tracker "https://notabug.org/cage/clunit2/issues"
-  :licence     "BSD"
+  :licence     "MIT"
   :description "CLUnit is a Common Lisp unit testing framework."
   :long-description
   "CLUnit is a Common Lisp unit testing framework. It is designed to be easy to use so that you can quickly start testing.
