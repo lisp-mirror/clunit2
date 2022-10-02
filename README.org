@@ -128,7 +128,9 @@ diagnostics or documentation. For example
 
 #+BEGIN_SRC lisp
   (deftest test-suiteless ()
-    (let ((a 1) (b 2) (c 3))
+    (let ((a 1)
+          (b 2)
+          (c 3))
       (assert-true (= a b c) "This assertion is meant to fail." a b c )))
 
   (run-test 'test-suiteless :report-progress nil)
@@ -157,6 +159,18 @@ SUMMARY:
     Tested 1 assertion.
         Failed: 1/1 all tests failed
 #+END_SRC
+
+* Implementation specific notes
+
+** ABCL
+
+  To  get a  proper formatted  summary the  special variable  variable
+  ~*print-pretty*~ needs to be bound to a *non nil* value.
+
+  #+BEGIN_SRC lisp
+    (let ((*print-pretty* t))
+      (run-test 'test-suiteless :report-progress nil))
+  #+END_SRC
 
 * BUGS
   Please file bug report on

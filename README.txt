@@ -8,8 +8,10 @@ Table of Contents
 2. Overview
 3. Example
 4. Tests and assertions
-5. BUGS
-6. Notes
+5. Implementation specific notes
+.. 1. ABCL
+6. BUGS
+7. Notes
 
 
 1 CLUnit
@@ -155,7 +157,9 @@ Table of Contents
 
   ┌────
   │ (deftest test-suiteless ()
-  │   (let ((a 1) (b 2) (c 3))
+  │   (let ((a 1)
+  │         (b 2)
+  │         (c 3))
   │     (assert-true (= a b c) "This assertion is meant to fail." a b c )))
   │
   │ (run-test 'test-suiteless :report-progress nil)
@@ -186,7 +190,22 @@ Table of Contents
   └────
 
 
-5 BUGS
+5 Implementation specific notes
+═══════════════════════════════
+
+5.1 ABCL
+────────
+
+  To get a proper formatted summary the special variable variable
+  `*print-pretty*' needs to be bound to a *non nil* value.
+
+  ┌────
+  │ (let ((*print-pretty* t))
+  │   (run-test 'test-suiteless :report-progress nil))
+  └────
+
+
+6 BUGS
 ══════
 
   Please file bug report on the [issue tracker]
@@ -195,7 +214,7 @@ Table of Contents
 [issue tracker] <https://notabug.org/cage/clunit2/issues>
 
 
-6 Notes
+7 Notes
 ═══════
 
   This is a fork of <https://github.com/tgutu/clunit> .
