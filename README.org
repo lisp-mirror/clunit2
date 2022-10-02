@@ -162,7 +162,7 @@ SUMMARY:
 
 * Implementation specific notes
 
-** ABCL
+** ABCL and CCL
 
   To  get a  proper formatted  summary the  special variable  variable
   ~*print-pretty*~ needs to be bound to a *non nil* value.

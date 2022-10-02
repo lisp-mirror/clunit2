@@ -9,7 +9,7 @@ Table of Contents
 3. Example
 4. Tests and assertions
 5. Implementation specific notes
-.. 1. ABCL
+.. 1. ABCL and CCL
 6. BUGS
 7. Notes
 
@@ -193,8 +193,8 @@ Table of Contents
 5 Implementation specific notes
 ═══════════════════════════════
 
-5.1 ABCL
-────────
+5.1 ABCL and CCL
+────────────────
 
   To get a proper formatted summary the special variable variable
   `*print-pretty*' needs to be bound to a *non nil* value.
