@@ -1,5 +1,7 @@
 * CLUnit
 
+* moved to [[https://notabug.org/cage/clunit2/]]
+
 * Overview
 
 CLUnit is a  Common Lisp unit testing framework. It  is designed to be
