@@ -1,6 +1,6 @@
 * CLUnit
 
-* moved to [[https://notabug.org/cage/clunit2/]]
+* moved to [[https://codeberg.org/cage/clunit2/]]
 
 * Overview
 
